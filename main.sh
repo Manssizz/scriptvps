@@ -325,6 +325,7 @@ function install_all() {
     install_slowdns >> /root/install.log
     pasang_rclone >> /root/install.log
     download_config >> /root/install.log
+    tambahan >> /root/install.log
 }
 
 function finish(){
@@ -416,4 +417,4 @@ function finish(){
         reboot
     fi
 
-}
+}   
