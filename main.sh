@@ -51,7 +51,7 @@ function is_root() {
 
 ### Update and remove packages
 function base_package() {
-    sudo apt-get remove && autoremove --purge -y apache2 ufw exim4 firewalld -y
+    sudo apt-get remove -y apache2 ufw exim4 firewalld -y
     sudo add-apt-repository ppa:vbernat/haproxy-2.7 -y
     sudo apt update && apt upgrade -y
     sudo apt-get install -y --no-install-recommends software-properties-common
@@ -62,7 +62,7 @@ function base_package() {
     net-tools openssl ca-certificates gnupg gnupg2 ca-certificates lsb-release \
     git xz-utils apt-transport-https gnupg1 dnsutils cron bash-completion ntpdate chrony jq \
     openvpn easy-rsa python3-certbot-nginx -y
-    sudo apt-get remove && autoremove -y
+    sudo apt-get autoremove -y
     apt-get clean all
 }
 clear
