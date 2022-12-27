@@ -49,13 +49,13 @@ setup_dnstt() {
 	cd
 	rm -rf *
 	mkdir -p /etc/slowdns
-	wget -O dnstt-server "${REPOS}SlowDNS/dnstt-server" && chmod +x dnstt-server >/dev/null 2>&1
-	wget -O dnstt-client "${REPOS}SlowDNS/dnstt-client" && chmod +x dnstt-client >/dev/null 2>&1
+	wget -O dnstt-server "${REPOS}slowdns/dnstt-server" && chmod +x dnstt-server >/dev/null 2>&1
+	wget -O dnstt-client "${REPOS}slowdns/dnstt-client" && chmod +x dnstt-client >/dev/null 2>&1
 	./dnstt-server -gen-key -privkey-file server.key -pubkey-file server.pub
 	chmod +x *
 	mv * /etc/slowdns
-	wget -O /etc/systemd/system/client.service "${REPOS}SlowDNS/client" >/dev/null 2>&1
-	wget -O /etc/systemd/system/server.service "${REPOS}SlowDNS/server" >/dev/null 2>&1
+	wget -O /etc/systemd/system/client.service "${REPOS}slowdns/client" >/dev/null 2>&1
+	wget -O /etc/systemd/system/server.service "${REPOS}slowdns/server" >/dev/null 2>&1
 	sed -i "s/xxxx/$NS_DOMAIN/g" /etc/systemd/system/client.service 
 	sed -i "s/xxxx/$NS_DOMAIN/g" /etc/systemd/system/server.service 
 }
