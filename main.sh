@@ -191,67 +191,64 @@ function download_config(){
     mv /root/menu/* /usr/sbin/
 
     # > Create rc.local services
-        cat >/root/.profile <<END
+
+    cat >/root/.profile <<EOF
 # ~/.profile: executed by Bourne-compatible login shells.
 if [ "$BASH" ]; then
-  if [ -f ~/.bashrc ]; then
-    . ~/.bashrc
-  fi
+    if [ -f ~/.bashrc ]; then
+        . ~/.bashrc
+    fi
 fi
 mesg n || true
 menu
-END
-    cat >/etc/cron.d/xp_all <<-END
-		SHELL=/bin/sh
-		PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
-		2 0 * * * root /usr/bin/xp
-	END
-    cat >/etc/cron.d/logclean <<-END
-		SHELL=/bin/sh
-		PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
-		*/1 * * * * root /usr/bin/logclean
-	END
+EOF
+
+    cat >/etc/cron.d/xp_all <<EOF
+    SHELL=/bin/sh
+    PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
+    2 0 * * * root /usr/bin/xp
+EOF
     chmod 644 /root/.profile
 
-    cat >/etc/cron.d/daily_reboot <<-END
-		SHELL=/bin/sh
-		PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
-		0 5 * * * root /sbin/reboot
-	END
+    cat >/etc/cron.d/daily_reboot <<EOF
+    SHELL=/bin/sh
+    PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
+    0 5 * * * root /sbin/reboot
+EOF
 
     echo "*/1 * * * * root echo -n > /var/log/nginx/access.log" >/etc/cron.d/log.nginx
     echo "*/1 * * * * root echo -n > /var/log/xray/access.log" >>/etc/cron.d/log.xray
     service cron restart
-    cat >/home/daily_reboot <<-END
-		5
-	END
+    cat >/home/daily_reboot <<EOF
+    5
+EOF
 
-    cat >/etc/systemd/system/rc-local.service <<-END
-		[Unit]
-		Description=/etc/rc.local
-		ConditionPathExists=/etc/rc.local
-		[Service]
-		Type=forking
-		ExecStart=/etc/rc.local start
-		TimeoutSec=0
-		StandardOutput=tty
-		RemainAfterExit=yes
-		SysVStartPriority=99
-		[Install]
-		WantedBy=multi-user.target
-	END
+    cat >/etc/systemd/system/rc-local.service <<EOF
+    [Unit]
+    Description=/etc/rc.local
+    ConditionPathExists=/etc/rc.local
+    [Service]
+    Type=forking
+    ExecStart=/etc/rc.local start
+    TimeoutSec=0
+    StandardOutput=tty
+    RemainAfterExit=yes
+    SysVStartPriority=99
+    [Install]
+    WantedBy=multi-user.target
+EOF
 
     echo "/bin/false" >>/etc/shells
     echo "/usr/sbin/nologin" >>/etc/shells
-    cat >/etc/rc.local <<-END
-		#!/bin/sh -e
-		# rc.local
-		# By default this script does nothing.
-		iptables -I INPUT -p udp --dport 5300 -j ACCEPT
-		iptables -t nat -I PREROUTING -p udp --dport 53 -j REDIRECT --to-ports 5300
-		systemctl restart netfilter-persistent
-		exit 0
-	END
+    cat >/etc/rc.local <<EOF
+    #!/bin/sh -e
+    # rc.local
+    # By default this script does nothing.
+    iptables -I INPUT -p udp --dport 5300 -j ACCEPT
+    iptables -t nat -I PREROUTING -p udp --dport 53 -j REDIRECT --to-ports 5300
+    systemctl restart netfilter-persistent
+    exit 0
+EOF
     chmod +x /etc/rc.local
 }
 
@@ -417,6 +414,6 @@ function finish(){
         reboot
     fi
 
-install_all
-finish
+install_all()
+finish()
 } 
