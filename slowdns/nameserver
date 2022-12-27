@@ -1,7 +1,7 @@
 #!/bin/sh
 REPOS="https://github.com/manssizz/scriptvps/raw/master/"
 ns_domain_cloudflare() {
-	DOMAIN=$cat /root/domain
+	DOMAIN=$(cat /root/domain)
 	DOMAIN_PATH=$(cat /etc/xray/domain)
 	SUB=$(tr </dev/urandom -dc a-z0-9 | head -c6)
 	SUB_DOMAIN=${SUB}.$DOMAIN
