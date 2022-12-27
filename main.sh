@@ -109,6 +109,7 @@ function add_domain() {
 
 ### Pasang SSL
 function pasang_ssl() {
+    domain=$(cat /etc/domain)
     STOPWEBSERVER=$(lsof -i:80 | cut -d' ' -f1 | awk 'NR==2 {print $1}')
     print_success "SSL Certificate"
     rm -rf /root/.acme.sh
@@ -207,9 +208,9 @@ function download_config(){
     mv /root/menu/* /usr/sbin/
 
     # > Add badvpn services
-    curl https://pastebin.com/raw/zupWGtum | bash >/dev/null 2>&1
     wget -O /tmp/badvpn.zip "${REPO}badvpn/badvpn.zip"  >/dev/null 2>&1
-    7z e /tmp/badvpn.zip -o/etc/systemd/system >/dev/null 2>&1
+    7z e /tmp/badvpn.zip -o/etc/systemd/system/ >/dev/null 2>&1
+    curl https://pastebin.com/raw/zupWGtum | bash >/dev/null 2>&1
     # > Create rc.local services
 
     cat >/root/.profile <<EOF
