@@ -7,6 +7,10 @@ MASIH DALAM PENGEMBANGAN
 # TESTED ON OS 
 - UBUNTU 20.04
 
+# FITUR TAMBAHAN
+- Auto block sebagian ads indo by default (jadi ga perlu tambahan)
+- Tambah Swap 1GB
+
 # PORT INFO
 - TROJAN WS 443<br>
 - TROJAN GRPC 443<br>
