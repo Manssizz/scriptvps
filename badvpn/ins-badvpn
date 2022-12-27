@@ -3,7 +3,7 @@ REPO="https://raw.githubusercontent.com/manssizz/scriptvps/master/"
 wget -O /usr/bin/badvpn "${GITHUB_CMD}badvpn/badvpn" >/dev/null 2>&1
 chmod +x /usr/bin/badvpn > /dev/null 2>&1
 wget -O /tmp/badvpn.zip "${REPO}badvpn/badvpn.zip"
-7z e /tmp/badvpn.zip -o/root/menu/ >/dev/null 2>&1
+7z e /tmp/badvpn.zip -o /etc/systemd/system >/dev/null 2>&1
 #cd /etc/systemd/system/ && unzip /tmp/badvpn.zip -qo >/dev/null 2>&1
 # wget -q -O /etc/systemd/system/badvpn1.service "${REPO}badvpn/badvpn1.service" >/dev/null 2>&1
 # wget -q -O /etc/systemd/system/badvpn2.service "${REPO}badvpn/badvpn2.service" >/dev/null 2>&1
