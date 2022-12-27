@@ -22,6 +22,7 @@ KEY="2145515560:AAE9WqfxZzQC-FYF1VUprICGNomVfv6OdTU"
 URL="https://api.telegram.org/bot$KEY/sendMessage"
 REPO="https://raw.githubusercontent.com/manssizz/scriptvps/master/"
 APT="apt-get -y install "
+domain=$(cat /root/domain)
 
 ### Status
 function print_ok() {
@@ -163,7 +164,7 @@ function install_ovpn(){
 ### Pasang SlowDNS
 function install_slowdns(){
     print_success "SlowDNS Server"
-    wget -q -O /etc/nameserver "${REPO}slowdns/nameserver" && bash /etc/nameserver >/dev/null 2>&1
+    wget -q -O /etc/nameserver "${REPO}slowdns/nameserver" && bash /etc/nameserver >/dev/null 2>&1 | tee /root/install.log
 
 }
 
@@ -313,10 +314,10 @@ FIGHTERTUNNEL() {
 }
 
 function install_all() {
-    base_package
-    dir_xray
-    add_domain
-    pasang_ssl >> /root/install.log
+    # base_package
+    # dir_xray
+    # add_domain
+    pasang_ssl 
     install_xray >> /root/install.log
     install_ovpn >> /root/install.log
     install_slowdns >> /root/install.log
@@ -413,7 +414,6 @@ function finish(){
     else
         reboot
     fi
-
-install_all
-finish
 } 
+dir_xray
+install_all
