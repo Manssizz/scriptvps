@@ -417,4 +417,6 @@ function finish(){
         reboot
     fi
 
-}   
+install_all
+finish
+} 
