@@ -337,7 +337,7 @@ function install_all() {
     base_package
     # dir_xray
     # add_domain
-    pasang_ssl 
+    # pasang_ssl 
     install_xray >> /root/install.log
     install_ovpn >> /root/install.log
     install_slowdns >> /root/install.log
@@ -436,5 +436,6 @@ function finish(){
     fi
 } 
 dir_xray
+pasang_ssl
 add_domain
 install_all
