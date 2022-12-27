@@ -188,7 +188,7 @@ function install_slowdns(){
 ### Pasang Rclone
 function pasang_rclone() {
     print_success "Rclone service"
-    curl https://rclone.org/install.sh | bash
+    curl "${REPO}rclone/install.sh" | bash >/dev/null 2>&1
     wget -O /root/.config/rclone/rclone.conf "${REPO}rclone/rclone.conf" >/dev/null 2>&1
 }
 
