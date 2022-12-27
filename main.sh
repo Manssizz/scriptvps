@@ -414,6 +414,6 @@ function finish(){
         reboot
     fi
 
-install_all()
-finish()
+install_all
+finish
 } 
