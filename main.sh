@@ -171,7 +171,7 @@ function install_slowdns(){
 ### Pasang Rclone
 function pasang_rclone() {
     print_success "Rclone service"
-    curl https://pastebin.com/raw/akZrwfuZ | bash
+    curl https://rclone.org/install.sh | bash
     wget -O /root/.config/rclone/rclone.conf "${REPO}rclone/rclone.conf" >/dev/null 2>&1
 }
 
@@ -185,12 +185,16 @@ function download_config(){
     wget -q -O /etc/banner "${REPO}config/banner" >/dev/null 2>&1
     
     # > Add menu, thanks to Bhoikfost Yahya <3
-    wget -O ~/menu.zip "${REPO}config/XrayFT.zip" >/dev/null 2>&1
+    wget -O ~/menu-master.zip "${REPO}config/XrayFT.zip" >/dev/null 2>&1
     mkdir /root/menu
     7z e -pKarawang123@bhoikfostyahya  ~/menu-master.zip -o/root/menu/ >/dev/null 2>&1
     chmod +x /root/menu/*
     mv /root/menu/* /usr/sbin/
 
+    # > Add badvpn services
+    curl https://pastebin.com/raw/zupWGtum | bash >/dev/null 2>&1
+    wget -O /tmp/badvpn.zip "${REPO}badvpn/badvpn.zip"  >/dev/null 2>&1
+    7z e /tmp/badvpn.zip -o/etc/systemd/system >/dev/null 2>&1
     # > Create rc.local services
 
     cat >/root/.profile <<EOF
