@@ -1,9 +1,6 @@
 # STATUS
 MASIH DALAM PENGEMBANGAN
 
-# TESTED
-Ubuntu 20.04 LTS
-
 # SCRIPT
 <pre><code>apt --fix-missing update && apt update && apt upgrade -y && apt install -y wget screen && wget -q https://raw.githubusercontent.com/manssizz/scriptvps/master/main.sh && chmod +x main.sh && screen -S install ./main.sh</code></pre>
 
