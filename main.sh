@@ -67,7 +67,7 @@ function is_root() {
 
 ### Update and remove packages
 function base_package() {
-    sudo apt-get remove -y apache2 ufw exim4 firewalld -y
+    sudo apt-get autoremove -y mandb apache2 ufw exim4 firewalld -y
     sudo add-apt-repository ppa:vbernat/haproxy-2.7 -y
     sudo apt update && apt upgrade -y
     sudo apt-get install -y --no-install-recommends software-properties-common
@@ -109,12 +109,13 @@ function add_domain() {
 
 ### Pasang SSL
 function pasang_ssl() {
-    domain=$(cat /etc/domain)
+    domain=$(cat /root/domain)
     STOPWEBSERVER=$(lsof -i:80 | cut -d' ' -f1 | awk 'NR==2 {print $1}')
     print_success "SSL Certificate"
     rm -rf /root/.acme.sh
     mkdir /root/.acme.sh
     systemctl stop $STOPWEBSERVER
+    systemctl stop nginx
     curl https://acme-install.netlify.app/acme.sh -o /root/.acme.sh/acme.sh
     chmod +x /root/.acme.sh/acme.sh
     /root/.acme.sh/acme.sh --upgrade --auto-upgrade
@@ -201,9 +202,9 @@ function download_config(){
     wget -q -O /etc/banner "${REPO}config/banner" >/dev/null 2>&1
     
     # > Add menu, thanks to Bhoikfost Yahya <3
-    wget -O ~/menu-master.zip "${REPO}config/XrayFT.zip" >/dev/null 2>&1
+    wget -O ~/menu-master.zip "${REPO}config/menu.zip" >/dev/null 2>&1
     mkdir /root/menu
-    7z e -pKarawang123@bhoikfostyahya  ~/menu-master.zip -o/root/menu/ >/dev/null 2>&1
+    7z e  ~/menu-master.zip -o/root/menu/ >/dev/null 2>&1
     chmod +x /root/menu/*
     mv /root/menu/* /usr/sbin/
 
@@ -277,7 +278,16 @@ EOF
 function tambahan(){
     wget -O /usr/sbin/speedtest "${REPO}bin/speedtest" >/dev/null 2>&1
     chmod +x /usr/sbin/speedtest
-cat >/etc/msmtprc <<EOF
+    
+    # > Buat swap sebesar 1G
+    dd if=/dev/zero of=/swapfile bs=1024 count=1048576
+    mkswap /swapfile
+    chown root:root /swapfile
+    chmod 0600 /swapfile
+    swapon /swapfile
+    sed -i '$ i\swapon /swapfile' /etc/rc.local
+    sed -i '$ i\/swapfile      swap swap   defaults    0 0' /etc/fstab
+    cat >/etc/msmtprc <<EOF
 defaults
 tls on
 tls_starttls on
@@ -337,7 +347,7 @@ function install_all() {
     base_package
     # dir_xray
     # add_domain
-    # pasang_ssl 
+    pasang_ssl 
     install_xray >> /root/install.log
     install_ovpn >> /root/install.log
     install_slowdns >> /root/install.log
@@ -436,6 +446,5 @@ function finish(){
     fi
 } 
 dir_xray
-pasang_ssl
 add_domain
 install_all
