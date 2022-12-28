@@ -6,7 +6,7 @@ After=syslog.target network-online.target
 [Service]
 User=root
 NoNewPrivileges=true
-ExecStart=/usr/bin/ws -f /usr/bin/tun.conf
+ExecStart=/usr/sbin/websocket -f /etc/websocket/tun.conf
 Restart=on-failure
 RestartPreventExitStatus=23
 LimitNPROC=10000

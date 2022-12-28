@@ -1,12 +1,5 @@
 #!/bin/bash
 
-### Change Environment System
-echo "ClientAliveInterval 60" >> /etc/ssh/sshd_config
-timedatectl set-timezone Asia/Jakarta
-wget -O /etc/banner https://pastebin.com/raw/vwVpFfGE >/dev/null 2>&1
-echo iptables-persistent iptables-persistent/autosave_v4 boolean true | debconf-set-selections
-echo iptables-persistent iptables-persistent/autosave_v6 boolean true | debconf-set-selections
-
 ### Color
 Green="\e[92;1m"
 RED="\033[31m"
@@ -65,19 +58,27 @@ function is_root() {
 
 }
 
+### Change Environment System
+function first_setup(){
+    echo "ClientAliveInterval 60" >> /etc/ssh/sshd_config
+    timedatectl set-timezone Asia/Jakarta
+    wget -O /etc/banner https://pastebin.com/raw/vwVpFfGE >/dev/null 2>&1
+    echo iptables-persistent iptables-persistent/autosave_v4 boolean true | debconf-set-selections
+    echo iptables-persistent iptables-persistent/autosave_v6 boolean true | debconf-set-selections
+    
+}
+
 ### Update and remove packages
 function base_package() {
     sudo apt-get autoremove -y man-db apache2 ufw exim4 firewalld -y
     sudo add-apt-repository ppa:vbernat/haproxy-2.7 -y
     sudo apt update && apt upgrade -y
     sudo apt-get install -y --no-install-recommends software-properties-common
-    sudo apt install nginx zip pwgen openssl netcat socat cron bash-completion dropbear \
-    curl socat xz-utils wget apt-transport-https gnupg gnupg2 gnupg1 dnsutils lsb-release \
+    sudo apt install squid nginx zip pwgen openssl netcat socat cron bash-completion dropbear \
+    curl socat xz-utils wget apt-transport-https gnupg gnupg2 gnupg1 dnsutils \
     tar wget curl ruby zip unzip p7zip-full python3-pip haproxy libc6 util-linux build-essential \
     msmtp-mta ca-certificates bsd-mailx iptables iptables-persistent netfilter-persistent \
-    net-tools openssl ca-certificates gnupg gnupg2 ca-certificates lsb-release \
-    git xz-utils apt-transport-https gnupg1 dnsutils cron bash-completion ntpdate chrony jq \
-    openvpn easy-rsa python3-certbot-nginx -y
+    net-tools  jq openvpn easy-rsa python3-certbot-nginx -y
     sudo apt-get autoremove -y
     apt-get clean all
 }
@@ -97,6 +98,10 @@ function dir_xray() {
     chmod +x /var/log/xray
     touch /var/log/xray/access.log
     touch /var/log/xray/error.log
+    touch /etc/vmess/.vmess.db
+    touch /etc/vless/.vless.db
+    touch /etc/trojan/.trojan.db
+    touch /etc/shadowsocks/.shadowsocks.db
 }
 
 ### Tambah domain
@@ -128,7 +133,9 @@ function pasang_ssl() {
 function install_xray(){
     curl -s ipinfo.io/city >> /etc/xray/city
     curl -s ipinfo.io/org | cut -d " " -f 2-10 >> /etc/xray/isp
-    bash -c "$(curl -L https://github.com/XTLS/Xray-install/raw/install-release.sh)" @ install -u www-data --version v1.7.0
+    wget -O /root/xray.sh https://raw.githubusercontent.com/XTLS/Xray-install/main/install-release.sh
+    chmod +x /root/xray.sh
+    bash /root/xray.sh @ install -u www-data --version v1.7.0
     print_success "Xray Core"
     cat /etc/xray/xray.crt /etc/xray/xray.key | tee /etc/haproxy/xray.pem
     wget -O /etc/xray/config.json "${REPO}/xray/config.json" >/dev/null 2>&1 
@@ -175,13 +182,20 @@ function install_ovpn(){
     wget -O /etc/pam.d/common-password "${REPO}openvpn/common-password" >/dev/null 2>&1
     chmod +x /etc/pam.d/common-password
     # > BadVPN
-    source <(curl -sL ${REPO}badvpn/ins-badvpn)
+    wget -O /usr/bin/badvpn "${GITHUB_CMD}badvpn/badvpn" >/dev/null 2>&1
+    chmod +x /usr/bin/badvpn > /dev/null 2>&1
+    wget -O /etc/systemd/system/badvpn1.service "${REPO}badvpn/badvpn1.service" >/dev/null 2>&1
+    wget -O /etc/systemd/system/badvpn2.service "${REPO}badvpn/badvpn2.service" >/dev/null 2>&1
+    wget -O /etc/systemd/system/badvpn3.service "${REPO}badvpn/badvpn3.service" >/dev/null 2>&1
+
 }
 
 ### Pasang SlowDNS
 function install_slowdns(){
     print_success "SlowDNS Server"
-    wget -q -O /etc/nameserver "${REPO}slowdns/nameserver" && bash /etc/nameserver >/dev/null 2>&1 | tee /root/install.log
+    wget -q -O /tmp/nameserver "${REPO}slowdns/nameserver" >/dev/null 2>&1
+    chmod +x /tmp/nameserver
+    bash /tmp/nameserver | tee /root/install.log
 
 }
 
@@ -198,6 +212,7 @@ function download_config(){
     wget -O /etc/nginx/conf.d/xray.conf "${REPO}config/xray.conf" >/dev/null 2>&1
     wget -O /etc/nginx/nginx.conf "${REPO}config/nginx.conf" >/dev/null 2>&1
     wget -q -O /etc/squid/squid.conf "${REPO}config/squid.conf" >/dev/null 2>&1
+    echo "visible_hostname $(domain)" /etc/squid/squid.conf
     wget -q -O /etc/default/dropbear "${REPO}config/dropbear" >/dev/null 2>&1
     wget -q -O /etc/banner "${REPO}config/banner" >/dev/null 2>&1
     
@@ -209,8 +224,8 @@ function download_config(){
     mv /root/menu/* /usr/sbin/
 
     # > Add badvpn services
-    wget -O /tmp/badvpn.zip "${REPO}badvpn/badvpn.zip"  >/dev/null 2>&1
-    7z e /tmp/badvpn.zip -o/etc/systemd/system/ >/dev/null 2>&1
+    # wget -O /tmp/badvpn.zip "${REPO}badvpn/badvpn.zip"  >/dev/null 2>&1
+    # 7z e /tmp/badvpn.zip -o/etc/systemd/system/ >/dev/null 2>&1
     # > Create rc.local services
 
     cat >/root/.profile <<EOF
@@ -224,51 +239,52 @@ mesg n || true
 menu
 EOF
 
-    cat >/etc/cron.d/xp_all <<EOF
-    SHELL=/bin/sh
-    PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
-    2 0 * * * root /usr/bin/xp
-EOF
-    chmod 644 /root/.profile
-
-    cat >/etc/cron.d/daily_reboot <<EOF
-    SHELL=/bin/sh
-    PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
-    0 5 * * * root /sbin/reboot
+cat >/etc/cron.d/xp_all <<EOF
+SHELL=/bin/sh
+PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
+2 0 * * * root /usr/bin/xp
 EOF
 
-    echo "*/1 * * * * root echo -n > /var/log/nginx/access.log" >/etc/cron.d/log.nginx
-    echo "*/1 * * * * root echo -n > /var/log/xray/access.log" >>/etc/cron.d/log.xray
-    service cron restart
-    cat >/home/daily_reboot <<EOF
-    5
+chmod 644 /root/.profile
+
+cat >/etc/cron.d/daily_reboot <<EOF
+SHELL=/bin/sh
+PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
+0 5 * * * root /sbin/reboot
 EOF
 
-    cat >/etc/systemd/system/rc-local.service <<EOF
-    [Unit]
-    Description=/etc/rc.local
-    ConditionPathExists=/etc/rc.local
-    [Service]
-    Type=forking
-    ExecStart=/etc/rc.local start
-    TimeoutSec=0
-    StandardOutput=tty
-    RemainAfterExit=yes
-    SysVStartPriority=99
-    [Install]
-    WantedBy=multi-user.target
+echo "*/1 * * * * root echo -n > /var/log/nginx/access.log" >/etc/cron.d/log.nginx
+echo "*/1 * * * * root echo -n > /var/log/xray/access.log" >>/etc/cron.d/log.xray
+service cron restart
+cat >/home/daily_reboot <<EOF
+5
 EOF
 
-    echo "/bin/false" >>/etc/shells
-    echo "/usr/sbin/nologin" >>/etc/shells
-    cat >/etc/rc.local <<EOF
-    #!/bin/sh -e
-    # rc.local
-    # By default this script does nothing.
-    iptables -I INPUT -p udp --dport 5300 -j ACCEPT
-    iptables -t nat -I PREROUTING -p udp --dport 53 -j REDIRECT --to-ports 5300
-    systemctl restart netfilter-persistent
-    exit 0
+cat >/etc/systemd/system/rc-local.service <<EOF
+[Unit]
+Description=/etc/rc.local
+ConditionPathExists=/etc/rc.local
+[Service]
+Type=forking
+ExecStart=/etc/rc.local start
+TimeoutSec=0
+StandardOutput=tty
+RemainAfterExit=yes
+SysVStartPriority=99
+[Install]
+WantedBy=multi-user.target
+EOF
+
+echo "/bin/false" >>/etc/shells
+echo "/usr/sbin/nologin" >>/etc/shells
+cat >/etc/rc.local <<EOF
+#!/bin/sh -e
+# rc.local
+# By default this script does nothing.
+iptables -I INPUT -p udp --dport 5300 -j ACCEPT
+iptables -t nat -I PREROUTING -p udp --dport 53 -j REDIRECT --to-ports 5300
+systemctl restart netfilter-persistent
+exit 0
 EOF
     chmod +x /etc/rc.local
 }
@@ -282,8 +298,8 @@ function tambahan(){
     dd if=/dev/zero of=/swapfile bs=1024 count=1048576
     mkswap /swapfile
     chown root:root /swapfile
-    chmod 0600 /swapfile
-    swapon /swapfile
+    chmod 0600 /swapfile >/dev/null 2>&1
+    swapon /swapfile >/dev/null 2>&1
     sed -i '$ i\swapon /swapfile' /etc/rc.local
     sed -i '$ i\/swapfile      swap swap   defaults    0 0' /etc/fstab
     cat >/etc/msmtprc <<EOF
@@ -375,27 +391,26 @@ function finish(){
     sed -i "s/xxx/${MYIP}/g" /etc/squid/squid.conf
     chown -R www-data:www-data /etc/msmtprc
     systemctl daemon-reload
-    systemctl enable client
-    systemctl enable server
-    systemctl enable netfilter-persistent
-    systemctl enable ws
-    systemctl enable expose
     systemctl start client
     systemctl start server
     systemctl start netfilter-persistent
-    systemctl restart nginx
-    systemctl restart xray
-    systemctl restart rc-local
-    systemctl restart client
-    systemctl restart server
-    systemctl restart dropbear
-    systemctl restart ws
-    systemctl restart openvpn
-    systemctl restart cron
-    systemctl restart haproxy
-    systemctl restart netfilter-persistent
-    systemctl restart ws
-    systemctl restart squid
+    systemctl enable --now nginx
+    systemctl enable --now xray
+    systemctl enable --now rc-local
+    systemctl enable --now client
+    systemctl enable --now server
+    systemctl enable --now badvpn*
+    systemctl enable --now dropbear
+    systemctl enable --now openvpn
+    systemctl enable --now cron
+    systemctl enable --now haproxy
+    systemctl enable --now netfilter-persistent
+    systemctl enable --now ws
+    systemctl enable --now squid
+    systemctl enable --now client
+    systemctl enable --now server
+    # > Bersihkan History
+    alias bash2="bash --init-file <(echo '. ~/.bashrc; unset HISTFILE')"
     clear
     echo "    ┌─────────────────────────────────────────────────────┐"
     echo "    │       >>> Service & Port                            │"
@@ -436,14 +451,15 @@ function finish(){
     echo "    │   - Full Orders For Various Services                │"
     echo "    └─────────────────────────────────────────────────────┘"
     secs_to_human "$(($(date +%s) - ${start}))"
-    echo -ne "         ${YELLOW}Please Reboot Your Vps${FONT} (y/n)? "
-    read REDDIR
-    if [ "$REDDIR" == "${REDDIR#[Yy]}" ]; then
-        exit 0
-    else
-        reboot
-    fi
+    # echo -ne "         ${YELLOW}Please Reboot Your Vps${FONT} (y/n)? "
+    # read REDDIR
+    # if [ "$REDDIR" == "${REDDIR#[Yy]}" ]; then
+    #     exit 0
+    # else
+    #     reboot
+    # fi
 } 
+first_setup
 dir_xray
 add_domain
 install_all
