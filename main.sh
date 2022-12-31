@@ -31,7 +31,10 @@ URL="https://api.telegram.org/bot$KEY/sendMessage"
 REPO="https://raw.githubusercontent.com/manssizz/scriptvps/master/"
 APT="apt-get -y install "
 domain=$(cat /root/domain)
-
+start=$(date +%s)
+secs_to_human() {
+    echo "Installation time : $((${1} / 3600)) hours $(((${1} / 60) % 60)) minute's $((${1} % 60)) seconds"
+}
 ### Status
 function print_ok() {
     echo -e "${OK} ${BLUE} $1 ${FONT}"
@@ -60,9 +63,12 @@ function is_root() {
 
 ### Change Environment System
 function first_setup(){
-    echo "ClientAliveInterval 60" >> /etc/ssh/sshd_config
     timedatectl set-timezone Asia/Jakarta
-    wget -O /etc/banner https://pastebin.com/raw/vwVpFfGE >/dev/null 2>&1
+    wget -O /etc/banner ${REPO}config/banner >/dev/null 2>&1
+    chmod +x /etc/banner
+    wget -O /etc/ssh/sshd_config ${REPO}config/sshd_config >/dev/null 2>&1
+    chmod 644 /etc/ssh/sshd_config
+
     echo iptables-persistent iptables-persistent/autosave_v4 boolean true | debconf-set-selections
     echo iptables-persistent iptables-persistent/autosave_v6 boolean true | debconf-set-selections
     
@@ -74,7 +80,7 @@ function base_package() {
     sudo add-apt-repository ppa:vbernat/haproxy-2.7 -y
     sudo apt update && apt upgrade -y
     sudo apt-get install -y --no-install-recommends software-properties-common
-    sudo apt install squid nginx zip pwgen openssl netcat socat cron bash-completion dropbear \
+    sudo apt install squid nginx zip pwgen openssl netcat socat cron bash-completion \
     curl socat xz-utils wget apt-transport-https gnupg gnupg2 gnupg1 dnsutils \
     tar wget curl ruby zip unzip p7zip-full python3-pip haproxy libc6 util-linux build-essential \
     msmtp-mta ca-certificates bsd-mailx iptables iptables-persistent netfilter-persistent \
@@ -92,12 +98,13 @@ function dir_xray() {
     mkdir -p /etc/vless
     mkdir -p /etc/trojan
     mkdir -p /etc/shadowsocks
-    mkdir -p /usr/sbin/xray/
+    # mkdir -p /usr/sbin/xray/
     mkdir -p /var/log/xray/
     mkdir -p /var/www/html
-    chmod +x /var/log/xray
+#    chmod +x /var/log/xray
     touch /var/log/xray/access.log
     touch /var/log/xray/error.log
+    chmod 777 /var/log/xray/*.log
     touch /etc/vmess/.vmess.db
     touch /etc/vless/.vless.db
     touch /etc/trojan/.trojan.db
@@ -127,26 +134,29 @@ function pasang_ssl() {
     /root/.acme.sh/acme.sh --set-default-ca --server letsencrypt
     /root/.acme.sh/acme.sh --issue -d $domain --standalone -k ec-256
     ~/.acme.sh/acme.sh --installcert -d $domain --fullchainpath /etc/xray/xray.crt --keypath /etc/xray/xray.key --ecc
+    chmod 777 /etc/xray/xray.key
 }
 
 ### Install Xray
 function install_xray(){
     curl -s ipinfo.io/city >> /etc/xray/city
     curl -s ipinfo.io/org | cut -d " " -f 2-10 >> /etc/xray/isp
-    wget -O /root/xray.sh https://raw.githubusercontent.com/XTLS/Xray-install/main/install-release.sh
-    chmod +x /root/xray.sh
-    bash /root/xray.sh @ install -u www-data --version v1.7.0
+    latest_version="$(curl -s https://api.github.com/repos/XTLS/Xray-core/releases | grep tag_name | sed -E 's/.*"v(.*)".*/\1/' | head -n 1)"
+    xraycore_link="https://github.com/XTLS/Xray-core/releases/download/v$latest_version/xray-linux-64.zip"
+    curl -sL "$xraycore_link" -o xray.zip
+    unzip -q xray.zip && rm -rf xray.zip
+    mv xray /usr/sbin/xray
     print_success "Xray Core"
     cat /etc/xray/xray.crt /etc/xray/xray.key | tee /etc/haproxy/xray.pem
-    wget -O /etc/xray/config.json "${REPO}/xray/config.json" >/dev/null 2>&1 
-    wget -O /usr/sbin/xray/xray "${REPO}/bin/xray" >/dev/null 2>&1
-    wget -O /usr/sbin/websocket "${REPO}/bin/ws" >/dev/null 2>&1
-    wget -O /etc/websocket/tun.conf "${REPO}/xray/tun.conf" >/dev/null 2>&1 
-    wget -O /etc/systemd/system/ws.service "${REPO}/xray/ws.service" >/dev/null 2>&1 
-    wget -q -O /etc/ipserver "${REPO}/server/ipserver" && bash /etc/ipserver >/dev/null 2>&1
+    wget -O /etc/xray/config.json "${REPO}xray/config.json" >/dev/null 2>&1 
+    #wget -O /usr/sbin/xray/ "${REPO}bin/xray" >/dev/null 2>&1
+    wget -O /usr/sbin/websocket "${REPO}bin/ws" >/dev/null 2>&1
+    wget -O /etc/websocket/tun.conf "${REPO}xray/tun.conf" >/dev/null 2>&1 
+    wget -O /etc/systemd/system/ws.service "${REPO}xray/ws.service" >/dev/null 2>&1 
+    wget -q -O /etc/ipserver "${REPO}server/ipserver" && bash /etc/ipserver >/dev/null 2>&1
 
     # > Set Permission
-    chmod +x /usr/sbin/xray/xray
+    chmod +x /usr/sbin/xray
     chmod +x /usr/sbin/websocket
     chmod 644 /etc/websocket/tun.conf
     chmod +x /etc/systemd/system/ws.service
@@ -164,7 +174,7 @@ User=www-data
 CapabilityBoundingSet=CAP_NET_ADMIN CAP_NET_BIND_SERVICE
 AmbientCapabilities=CAP_NET_ADMIN CAP_NET_BIND_SERVICE
 NoNewPrivileges=true
-ExecStart=/usr/sbin/xray/xray run -config /etc/xray/config.json
+ExecStart=/usr/sbin/xray run -config /etc/xray/config.json
 Restart=on-failure
 RestartPreventExitStatus=23
 LimitNPROC=10000
@@ -182,11 +192,7 @@ function install_ovpn(){
     wget -O /etc/pam.d/common-password "${REPO}openvpn/common-password" >/dev/null 2>&1
     chmod +x /etc/pam.d/common-password
     # > BadVPN
-    wget -O /usr/bin/badvpn "${GITHUB_CMD}badvpn/badvpn" >/dev/null 2>&1
-    chmod +x /usr/bin/badvpn > /dev/null 2>&1
-    wget -O /etc/systemd/system/badvpn1.service "${REPO}badvpn/badvpn1.service" >/dev/null 2>&1
-    wget -O /etc/systemd/system/badvpn2.service "${REPO}badvpn/badvpn2.service" >/dev/null 2>&1
-    wget -O /etc/systemd/system/badvpn3.service "${REPO}badvpn/badvpn3.service" >/dev/null 2>&1
+    source <(curl -sL ${REPO}badvpn/setup.sh)
 
 }
 
@@ -203,17 +209,20 @@ function install_slowdns(){
 function pasang_rclone() {
     print_success "Rclone service"
     curl "${REPO}rclone/install.sh" | bash >/dev/null 2>&1
-    wget -O /root/.config/rclone/rclone.conf "${REPO}rclone/rclone.conf" >/dev/null 2>&1
 }
 
 ### Ambil Konfig
 function download_config(){
     wget -O /etc/haproxy/haproxy.cfg "${REPO}config/haproxy.cfg" >/dev/null 2>&1
     wget -O /etc/nginx/conf.d/xray.conf "${REPO}config/xray.conf" >/dev/null 2>&1
+    sed -i "s/xxx/${domain}/g" /etc/nginx/conf.d/xray.conf
     wget -O /etc/nginx/nginx.conf "${REPO}config/nginx.conf" >/dev/null 2>&1
     wget -q -O /etc/squid/squid.conf "${REPO}config/squid.conf" >/dev/null 2>&1
-    echo "visible_hostname $(domain)" /etc/squid/squid.conf
+    echo "visible_hostname $(cat /etc/xray/domain)" /etc/squid/squid.conf
+    # > Add Dropbear
+    apt install dropbear -y
     wget -q -O /etc/default/dropbear "${REPO}config/dropbear" >/dev/null 2>&1
+    chmod 644 /etc/default/dropbear
     wget -q -O /etc/banner "${REPO}config/banner" >/dev/null 2>&1
     
     # > Add menu, thanks to Bhoikfost Yahya <3
@@ -223,10 +232,6 @@ function download_config(){
     chmod +x /root/menu/*
     mv /root/menu/* /usr/sbin/
 
-    # > Add badvpn services
-    # wget -O /tmp/badvpn.zip "${REPO}badvpn/badvpn.zip"  >/dev/null 2>&1
-    # 7z e /tmp/badvpn.zip -o/etc/systemd/system/ >/dev/null 2>&1
-    # > Create rc.local services
 
     cat >/root/.profile <<EOF
 # ~/.profile: executed by Bourne-compatible login shells.
@@ -294,13 +299,12 @@ function tambahan(){
     wget -O /usr/sbin/speedtest "${REPO}bin/speedtest" >/dev/null 2>&1
     chmod +x /usr/sbin/speedtest
     
-    # > Buat swap sebesar 1G
-    dd if=/dev/zero of=/swapfile bs=1024 count=1048576
+    # > Buat swap sebesar 512M
+    dd if=/dev/zero of=/swapfile bs=1024 count=524288
     mkswap /swapfile
     chown root:root /swapfile
     chmod 0600 /swapfile >/dev/null 2>&1
     swapon /swapfile >/dev/null 2>&1
-    sed -i '$ i\swapon /swapfile' /etc/rc.local
     sed -i '$ i\/swapfile      swap swap   defaults    0 0' /etc/fstab
     cat >/etc/msmtprc <<EOF
 defaults
@@ -358,6 +362,27 @@ FIGHTERTUNNEL() {
     rm -f /root/tmp
 }
 
+function enable_services(){
+    systemctl daemon-reload
+    systemctl start netfilter-persistent
+    systemctl enable --now nginx
+    systemctl enable --now xray
+    systemctl enable --now rc-local
+    systemctl enable --now dropbear
+    systemctl enable --now openvpn
+    systemctl enable --now cron
+    systemctl enable --now haproxy
+    systemctl enable --now netfilter-persistent
+    systemctl enable --now squid
+    systemctl enable ws
+    systemctl restart ws
+    systemctl enable client
+    systemctl restart client
+    systemctl enable server
+    systemctl restart server
+    wget -O /root/.config/rclone/rclone.conf "${REPO}rclone/rclone.conf" >/dev/null 2>&1
+}
+
 function install_all() {
     base_package
     # dir_xray
@@ -368,7 +393,9 @@ function install_all() {
     install_slowdns >> /root/install.log
     pasang_rclone >> /root/install.log
     download_config >> /root/install.log
+    enable_services >> /root/install.log
     tambahan >> /root/install.log
+
 }
 
 function finish(){
@@ -385,30 +412,13 @@ function finish(){
 "
     curl -s --max-time $TIMES -d "chat_id=$CHATID&disable_web_page_preview=1&text=$TEXT&parse_mode=html" $URL >/dev/null
     cp /etc/openvpn/*.ovpn /var/www/html/
+    # sed -i "s/xxx/${domain}/g" /etc/nginx/conf.d/xray.conf
     sed -i "s/xxx/${domain}/g" /var/www/html/index.html
-    sed -i "s/xxx/${domain}/g" /etc/nginx/conf.d/xray.conf
     sed -i "s/xxx/${domain}/g" /etc/haproxy/haproxy.cfg
     sed -i "s/xxx/${MYIP}/g" /etc/squid/squid.conf
     chown -R www-data:www-data /etc/msmtprc
-    systemctl daemon-reload
-    systemctl start client
-    systemctl start server
-    systemctl start netfilter-persistent
-    systemctl enable --now nginx
-    systemctl enable --now xray
-    systemctl enable --now rc-local
-    systemctl enable --now client
-    systemctl enable --now server
-    systemctl enable --now badvpn*
-    systemctl enable --now dropbear
-    systemctl enable --now openvpn
-    systemctl enable --now cron
-    systemctl enable --now haproxy
-    systemctl enable --now netfilter-persistent
-    systemctl enable --now ws
-    systemctl enable --now squid
-    systemctl enable --now client
-    systemctl enable --now server
+
+
     # > Bersihkan History
     alias bash2="bash --init-file <(echo '. ~/.bashrc; unset HISTFILE')"
     clear
@@ -451,15 +461,17 @@ function finish(){
     echo "    │   - Full Orders For Various Services                │"
     echo "    └─────────────────────────────────────────────────────┘"
     secs_to_human "$(($(date +%s) - ${start}))"
-    # echo -ne "         ${YELLOW}Please Reboot Your Vps${FONT} (y/n)? "
-    # read REDDIR
-    # if [ "$REDDIR" == "${REDDIR#[Yy]}" ]; then
-    #     exit 0
-    # else
-    #     reboot
-    # fi
-} 
+    echo -ne "         ${YELLOW}Please Reboot Your Vps${FONT} (y/n)? "
+    read REDDIR
+    if [ "$REDDIR" == "${REDDIR#[Yy]}" ]; then
+        exit 0
+    else
+        reboot
+    fi
+}
+FIGHTERTUNNEL
 first_setup
 dir_xray
 add_domain
 install_all
+finish  
