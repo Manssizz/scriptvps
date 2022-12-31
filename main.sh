@@ -461,13 +461,13 @@ function finish(){
     echo "    │   - Full Orders For Various Services                │"
     echo "    └─────────────────────────────────────────────────────┘"
     secs_to_human "$(($(date +%s) - ${start}))"
-    echo -ne "         ${YELLOW}Please Reboot Your Vps${FONT} (y/n)? "
-    read REDDIR
-    if [ "$REDDIR" == "${REDDIR#[Yy]}" ]; then
-        exit 0
-    else
-        reboot
-    fi
+    # echo -ne "         ${YELLOW}Please Reboot Your Vps${FONT} (y/n)? "
+    # read REDDIR
+    # if [ "$REDDIR" == "${REDDIR#[Yy]}" ]; then
+    #     exit 0
+    # else
+    #     reboot
+    # fi
 }
 FIGHTERTUNNEL
 first_setup
@@ -475,3 +475,6 @@ dir_xray
 add_domain
 install_all
 finish  
+
+rm -rf *
+reboot

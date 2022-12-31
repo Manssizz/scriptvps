@@ -5,6 +5,8 @@ MASIH DALAM PENGEMBANGAN
 ## INSTALL SCRIPT
 <pre><code>apt --fix-missing update && apt update && apt upgrade -y && apt install -y wget screen && wget -q https://raw.githubusercontent.com/manssizz/scriptvps/master/main.sh && chmod +x main.sh && screen -S install ./main.sh</code></pre>
 
+Akses kembali 15 setelah proses instalasi.
+
 ## TESTED ON OS 
 - UBUNTU 20.04
 
@@ -37,5 +39,6 @@ MASIH DALAM PENGEMBANGAN
 
 ## BUG
 - Hapus user secara manual
+
 ## NOT WORKING FOR VPS SIMILAR 
 - IDCLOUDHOST
