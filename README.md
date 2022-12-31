@@ -8,8 +8,8 @@ MASIH DALAM PENGEMBANGAN
 - UBUNTU 20.04
 
 # FITUR TAMBAHAN
-- Auto block sebagian ads indo by default (jadi ga perlu tambahan)
-- Tambah Swap 1GB
+- Auto block sebagian ads indo by default (jadi ga perlu tambahan adblock)
+- Tambah Swap 512GB
 
 # PORT INFO
 - TROJAN WS 443<br>
