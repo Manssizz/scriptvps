@@ -1,5 +1,5 @@
 # STATUS
-`Aplha Version` \
+`Versi Alpha` \
 MASIH DALAM PENGEMBANGAN
 
 # INSTALL SCRIPT
