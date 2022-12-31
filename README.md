@@ -1,7 +1,8 @@
 # STATUS
+`Aplha Version`
 MASIH DALAM PENGEMBANGAN
 
-# SCRIPT
+# INSTALL SCRIPT
 <pre><code>apt --fix-missing update && apt update && apt upgrade -y && apt install -y wget screen && wget -q https://raw.githubusercontent.com/manssizz/scriptvps/master/main.sh && chmod +x main.sh && screen -S install ./main.sh</code></pre>
 
 # TESTED ON OS 
@@ -34,5 +35,7 @@ MASIH DALAM PENGEMBANGAN
 - Always Use HTTPS : OFF<br>
 - UNDER ATTACK MODE : OFF<br>
 
+# BUG
+- Hapus user secara manual
 # NOT WORKING FOR VPS SIMILAR 
 - IDCLOUDHOST
