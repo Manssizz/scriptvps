@@ -11,7 +11,7 @@
       "settings": {
         "clients": [
   {
-            "password":"1d1c1d94-6987-4658-a4dc-8821a30fe7e0"
+            "password":"taibabi"
 #trojanxtls
           }
  ],
@@ -78,7 +78,7 @@
       "settings": {
         "clients": [
           {
-            "password":"1d1c1d94-6987-4658-a4dc-8821a30fe7e0"
+            "password":"taibabi"
 #trojanws
           }
         ],
@@ -99,7 +99,7 @@
       "settings": {
         "clients": [
           {
-            "password":"1d1c1d94-6987-4658-a4dc-8821a30fe7e0"
+            "password":"taibabi"
 #trojantcp
           }
          ]
@@ -120,7 +120,7 @@
           "decryption":"none",
             "clients": [
                {
-                 "id": "1d1c1d94-6987-4658-a4dc-8821a30fe7e0"
+                 "id": "taibabi"
 #vless
              }
           ]
@@ -139,7 +139,7 @@
       "settings": {
             "clients": [
                {
-                 "id": "1d1c1d94-6987-4658-a4dc-8821a30fe7e0",
+                 "id": "taibabi",
                  "alterId": 0
 #vmess
              }
@@ -205,7 +205,7 @@
          "decryption":"none",
            "clients": [
              {
-               "id": "1d1c1d94-6987-4658-a4dc-8821a30fe7e0"
+               "id": "taibabi"
 #vlessgrpc
              }
           ]
@@ -225,7 +225,7 @@
        "settings": {
         "clients": [
                {
-                 "id": "1d1c1d94-6987-4658-a4dc-8821a30fe7e0",
+                 "id": "taibabi",
                  "alterId": 0
 #vmessgrpc
              }
@@ -247,7 +247,7 @@
           "decryption":"none",
              "clients": [
                {
-                 "password": "1d1c1d94-6987-4658-a4dc-8821a30fe7e0"
+                 "password": "taibabi"
 #trojangrpc
                }
            ]
