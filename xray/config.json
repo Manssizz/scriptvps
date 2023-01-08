@@ -37,6 +37,10 @@
             "dest": 10006
           },
           {
+            "path": "/worryfree",
+            "dest": 10008
+          },
+          {
             "alpn": "h2",
             "dest": 10007,
             "xver": 0
@@ -307,6 +311,26 @@
           }
        }
     },
+    {
+      "port": 10008,
+      "listen": "127.0.0.1",
+      "protocol": "vless",
+       "settings": {
+           "decryption":"none",
+             "clients": [
+                {
+                  "id": "taibabi"
+#vless-worryfree
+              }
+           ]
+        },
+        "streamSettings":{
+          "network": "ws",
+             "wsSettings": {
+                 "path": "/worryfree"
+           }
+         }
+      },
   {
       "listen": "127.0.0.1",
       "port": 10000,
