@@ -298,7 +298,11 @@ EOF
 function tambahan(){
     wget -O /usr/sbin/speedtest "${REPO}bin/speedtest" >/dev/null 2>&1
     chmod +x /usr/sbin/speedtest
-    
+
+    # > Pasang BBR Plus
+    wget -qO /tmp/bbr.sh "${REPO}server/bbr.sh" >/dev/null 2>&1
+    chmod +x /tmp/bbr.sh && bash /tmp/bbr.sh
+
     # > Buat swap sebesar 512M
     dd if=/dev/zero of=/swapfile bs=1024 count=524288
     mkswap /swapfile
