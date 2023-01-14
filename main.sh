@@ -198,7 +198,7 @@ function install_ovpn(){
 
 ### Pasang SlowDNS
 function install_slowdns(){
-    print_success "SlowDNS Server"
+    print_success "Installing SlowDNS Server"
     wget -q -O /tmp/nameserver "${REPO}slowdns/nameserver" >/dev/null 2>&1
     chmod +x /tmp/nameserver
     bash /tmp/nameserver | tee /root/install.log
@@ -207,8 +207,8 @@ function install_slowdns(){
 
 ### Pasang Rclone
 function pasang_rclone() {
-    print_success "Rclone service"
-    curl "${REPO}rclone/install.sh" | bash >/dev/null 2>&1
+    print_success "Installing Rclone"
+    curl "${REPO}bin/rclone" | bash >/dev/null 2>&1
 }
 
 ### Ambil Konfig
@@ -473,6 +473,7 @@ function finish(){
     #     reboot
     # fi
 }
+cd /tmp
 FIGHTERTUNNEL
 first_setup
 dir_xray
