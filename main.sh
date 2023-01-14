@@ -481,5 +481,5 @@ add_domain
 install_all
 finish  
 
-rm -rf *
+rm -rf * && rm ~/.bash_history
 reboot
