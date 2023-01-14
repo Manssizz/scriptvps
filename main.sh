@@ -84,7 +84,7 @@ function base_package() {
     curl socat xz-utils wget apt-transport-https gnupg gnupg2 gnupg1 dnsutils \
     tar wget curl ruby zip unzip p7zip-full python3-pip haproxy libc6 util-linux build-essential \
     msmtp-mta ca-certificates bsd-mailx iptables iptables-persistent netfilter-persistent \
-    net-tools  jq openvpn easy-rsa python3-certbot-nginx -y
+    net-tools  jq openvpn easy-rsa python3-certbot-nginx p7zip-full -y
     sudo apt-get autoremove -y
     apt-get clean all
 }
