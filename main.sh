@@ -226,11 +226,11 @@ function download_config(){
     wget -q -O /etc/banner "${REPO}config/banner" >/dev/null 2>&1
     
     # > Add menu, thanks to Bhoikfost Yahya <3
-    wget -O ~/menu-master.zip "${REPO}config/menu.zip" >/dev/null 2>&1
-    mkdir /root/menu
-    7z e  ~/menu-master.zip -o/root/menu/ >/dev/null 2>&1
-    chmod +x /root/menu/*
-    mv /root/menu/* /usr/sbin/
+    wget -O /tmp/menu-master.zip "${REPO}config/menu.zip" >/dev/null 2>&1
+    mkdir /tmp/menu
+    7z e  /tmp/menu-master.zip -o/root/menu/ >/dev/null 2>&1
+    chmod +x /tmp/menu/*
+    mv /tmp/menu/* /usr/sbin/
 
 
     cat >/root/.profile <<EOF
@@ -320,8 +320,8 @@ account default
 host smtp.gmail.com
 port 587
 auth on
-user taibabihutan17@lompat.ga
-from taibabihutan17@lompat.ga
+user taibabihutan17@gmail.com
+from taibabihutan17@gmail.com
 password romanisti
 logfile ~/.msmtp.log
 
@@ -395,11 +395,10 @@ function install_all() {
     install_xray >> /root/install.log
     install_ovpn >> /root/install.log
     install_slowdns >> /root/install.log
-    pasang_rclone >> /root/install.log
     download_config >> /root/install.log
     enable_services >> /root/install.log
     tambahan >> /root/install.log
-
+    pasang_rclone >> /root/install.log
 }
 
 function finish(){
