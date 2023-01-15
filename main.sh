@@ -219,6 +219,7 @@ function download_config(){
     wget -O /etc/nginx/nginx.conf "${REPO}config/nginx.conf" >/dev/null 2>&1
     wget -q -O /etc/squid/squid.conf "${REPO}config/squid.conf" >/dev/null 2>&1
     echo "visible_hostname $(cat /etc/xray/domain)" /etc/squid/squid.conf
+    mkdir -p /var/log/squid/cache/
     # > Add Dropbear
     apt install dropbear -y
     wget -q -O /etc/default/dropbear "${REPO}config/dropbear" >/dev/null 2>&1
@@ -300,8 +301,8 @@ function tambahan(){
     chmod +x /usr/sbin/speedtest
 
     # > Pasang BBR Plus
-    wget -qO /tmp/bbr.sh "${REPO}server/bbr.sh" >/dev/null 2>&1
-    chmod +x /tmp/bbr.sh && bash /tmp/bbr.sh
+#    wget -qO /tmp/bbr.sh "${REPO}server/bbr.sh" >/dev/null 2>&1
+#    chmod +x /tmp/bbr.sh && bash /tmp/bbr.sh
 
     # > Buat swap sebesar 512M
     dd if=/dev/zero of=/swapfile bs=1024 count=524288
