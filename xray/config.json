@@ -11,7 +11,7 @@
       "settings": {
         "clients": [
   {
-            "password":"taibabi"
+            "password":"ef707261-0a23-4999-b52e-03c31efc7517"
 #trojanxtls
           }
  ],
@@ -82,7 +82,7 @@
       "settings": {
         "clients": [
           {
-            "password":"taibabi"
+            "password":"ef707261-0a23-4999-b52e-03c31efc7517"
 #trojanws
           }
         ],
@@ -103,7 +103,7 @@
       "settings": {
         "clients": [
           {
-            "password":"taibabi"
+            "password":"ef707261-0a23-4999-b52e-03c31efc7517"
 #trojantcp
           }
          ]
@@ -124,7 +124,7 @@
           "decryption":"none",
             "clients": [
                {
-                 "id": "taibabi"
+                 "id": "ef707261-0a23-4999-b52e-03c31efc7517"
 #vless
              }
           ]
@@ -143,7 +143,7 @@
       "settings": {
             "clients": [
                {
-                 "id": "taibabi",
+                 "id": "ef707261-0a23-4999-b52e-03c31efc7517",
                  "alterId": 0
 #vmess
              }
@@ -209,7 +209,7 @@
          "decryption":"none",
            "clients": [
              {
-               "id": "taibabi"
+               "id": "ef707261-0a23-4999-b52e-03c31efc7517"
 #vlessgrpc
              }
           ]
@@ -229,7 +229,7 @@
        "settings": {
         "clients": [
                {
-                 "id": "taibabi",
+                 "id": "ef707261-0a23-4999-b52e-03c31efc7517",
                  "alterId": 0
 #vmessgrpc
              }
@@ -251,7 +251,7 @@
           "decryption":"none",
              "clients": [
                {
-                 "password": "taibabi"
+                 "password": "ef707261-0a23-4999-b52e-03c31efc7517"
 #trojangrpc
                }
            ]
@@ -319,7 +319,7 @@
            "decryption":"none",
              "clients": [
                 {
-                  "id": "taibabi"
+                  "id": "ef707261-0a23-4999-b52e-03c31efc7517"
 #vless-worryfree
               }
            ]
