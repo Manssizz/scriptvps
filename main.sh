@@ -76,12 +76,16 @@ function first_setup(){
 
 ### Update and remove packages
 function base_package() {
+    sysctl -w net.ipv6.conf.all.disable_ipv6=1 && sysctl -w net.ipv6.conf.default.disable_ipv6=1
+    curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/gpg.key' | sudo gpg --dearmor -o /usr/share/keyrings/caddy-stable-archive-keyring.gpg --yes
+    curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/debian.deb.txt' | sudo tee /etc/apt/sources.list.d/caddy-stable.list
+    sudo apt update
     sudo apt-get autoremove -y man-db apache2 ufw exim4 firewalld -y
     sudo add-apt-repository ppa:vbernat/haproxy-2.7 -y
     sudo apt update && apt upgrade -y
     sudo apt-get install -y --no-install-recommends software-properties-common
-    sudo apt install squid nginx zip pwgen openssl netcat socat cron bash-completion \
-    curl socat xz-utils wget apt-transport-https gnupg gnupg2 gnupg1 dnsutils \
+    sudo apt install squid nginx zip pwgen openssl netcat debian-keyring debian-archive-keyring bash-completion \
+    curl socat xz-utils wget apt-transport-https gnupg gnupg2 gnupg1 dnsutils socat \
     tar wget curl ruby zip unzip p7zip-full python3-pip haproxy libc6 util-linux build-essential \
     msmtp-mta ca-certificates bsd-mailx iptables iptables-persistent netfilter-persistent \
     net-tools  jq openvpn easy-rsa python3-certbot-nginx p7zip-full -y
@@ -221,7 +225,7 @@ function download_config(){
     echo "visible_hostname $(cat /etc/xray/domain)" /etc/squid/squid.conf
     mkdir -p /var/log/squid/cache/
     chmod 777 /var/log/squid/cache/
-    
+
     # > Add Dropbear
     apt install dropbear -y
     wget -q -O /etc/default/dropbear "${REPO}config/dropbear" >/dev/null 2>&1
@@ -297,6 +301,47 @@ EOF
     chmod +x /etc/rc.local
 }
 
+### Tambah konfigurasi Caddy
+function caddy(){
+    wget -O /etc/caddy/vmess "${REPO}caddy/vmess" >/dev/null 2>&1
+    wget -O /etc/caddy/vless "${REPO}caddy/vless" >/dev/null 2>&1
+    wget -O /etc/caddy/trojan "${REPO}caddy/trojan" >/dev/null 2>&1
+    cat >/etc/caddy/Caddyfile <<-EOF
+$domain:443
+{
+    tls taibabi17@gmail.com
+    encode gzip
+
+
+    import vless
+    handle_path /vless {
+        reverse_proxy localhost:10001
+
+    }
+
+    import vmess
+    handle_path /vmess {
+        reverse_proxy localhost:10002
+    }
+
+    import trojan
+    handle_path /trojan-ws {
+        reverse_proxy localhost:10003
+    }
+
+    handle_path /ss-ws {
+        reverse_proxy localhost:10004
+    }
+
+    handle {
+        reverse_proxy https://$domain {
+            trusted_proxies 0.0.0.0/0
+            header_up Host {upstream_hostport}
+        }
+    }
+}
+EOF
+}
 ### Tambahan
 function tambahan(){
     wget -O /usr/sbin/speedtest "${REPO}bin/speedtest" >/dev/null 2>&1
@@ -381,6 +426,7 @@ function enable_services(){
     systemctl enable --now haproxy
     systemctl enable --now netfilter-persistent
     systemctl enable --now squid
+    systemctl enable --now caddy
     systemctl enable ws
     systemctl restart ws
     systemctl enable client
