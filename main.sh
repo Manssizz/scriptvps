@@ -348,7 +348,7 @@ touch /root/.install.log
 cat >/root/tmp <<-END
 #!/bin/bash
 #vps
-### taibabi $TANGGAL $MYIP
+### CendrawasihTunnel $TANGGAL $MYIP
 END
 ####
 FIGHTERTUNNEL() {
@@ -473,7 +473,7 @@ function finish(){
     #     reboot
     # fi
 }
-cd /tmp
+# cd /tmp
 FIGHTERTUNNEL
 first_setup
 dir_xray
@@ -481,5 +481,5 @@ add_domain
 install_all
 finish  
 
-rm -rf * && rm ~/.bash_history
-reboot
+# rm -rf * && rm ~/.bash_history
+# reboot
