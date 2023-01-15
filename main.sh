@@ -85,7 +85,7 @@ function base_package() {
     sudo apt update && apt upgrade -y
     sudo apt-get install -y --no-install-recommends software-properties-common
     sudo apt install squid nginx zip pwgen openssl netcat debian-keyring debian-archive-keyring bash-completion \
-    curl socat xz-utils wget apt-transport-https gnupg gnupg2 gnupg1 dnsutils socat \
+    curl socat xz-utils wget apt-transport-https gnupg gnupg2 gnupg1 dnsutils socat caddy \
     tar wget curl ruby zip unzip p7zip-full python3-pip haproxy libc6 util-linux build-essential \
     msmtp-mta ca-certificates bsd-mailx iptables iptables-persistent netfilter-persistent \
     net-tools  jq openvpn easy-rsa python3-certbot-nginx p7zip-full -y
@@ -303,6 +303,7 @@ EOF
 
 ### Tambah konfigurasi Caddy
 function caddy(){
+    mkdir -p /etc/caddy
     wget -O /etc/caddy/vmess "${REPO}caddy/vmess" >/dev/null 2>&1
     wget -O /etc/caddy/vless "${REPO}caddy/vless" >/dev/null 2>&1
     wget -O /etc/caddy/trojan "${REPO}caddy/trojan" >/dev/null 2>&1
@@ -445,6 +446,7 @@ function install_all() {
     install_ovpn >> /root/install.log
     install_slowdns >> /root/install.log
     download_config >> /root/install.log
+    caddy >> /root/install.log
     enable_services >> /root/install.log
     tambahan >> /root/install.log
     pasang_rclone >> /root/install.log
