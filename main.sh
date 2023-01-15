@@ -220,6 +220,8 @@ function download_config(){
     wget -q -O /etc/squid/squid.conf "${REPO}config/squid.conf" >/dev/null 2>&1
     echo "visible_hostname $(cat /etc/xray/domain)" /etc/squid/squid.conf
     mkdir -p /var/log/squid/cache/
+    chmod 777 /var/log/squid/cache/
+    
     # > Add Dropbear
     apt install dropbear -y
     wget -q -O /etc/default/dropbear "${REPO}config/dropbear" >/dev/null 2>&1
