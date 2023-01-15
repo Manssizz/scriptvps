@@ -209,7 +209,7 @@ Restart=on-failure
 WantedBy = multi-user.target
 EOF
 
-chmod +x /etc/systemd/system/kvmswap.service
+chmod 644 /etc/systemd/system/kvmswap.service
 chmod +x /usr/sbin/kvmswap
 systemctl enable --now kvmswap >/dev/null 2>&1
 

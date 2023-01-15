@@ -159,7 +159,7 @@ function install_xray(){
     chmod +x /usr/sbin/xray
     chmod +x /usr/sbin/websocket
     chmod 644 /etc/websocket/tun.conf
-    chmod +x /etc/systemd/system/ws.service
+    chmod 644 /etc/systemd/system/ws.service
 
     # > Create Service
     rm -rf /etc/systemd/system/xray.service.d
