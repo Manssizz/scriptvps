@@ -12,7 +12,7 @@ Akses kembali 15 setelah proses instalasi.
 
 ## FITUR TAMBAHAN
 - Auto block sebagian ads indo by default (jadi ga perlu tambahan adblock)
-- Tambah Swap 512GB
+- Tambah Swap 512MiB
 
 ## PORT INFO
 - TROJAN WS 443<br>
