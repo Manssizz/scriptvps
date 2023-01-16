@@ -104,7 +104,8 @@ function dir_xray() {
     mkdir -p /etc/shadowsocks
     # mkdir -p /usr/sbin/xray/
     mkdir -p /var/log/xray/
-    mkdir -p /var/www/html
+    mkdir -p /var/www/html/
+    mkdir -p /etc/cendrawasih/
 #    chmod +x /var/log/xray
     touch /var/log/xray/access.log
     touch /var/log/xray/error.log
@@ -112,6 +113,8 @@ function dir_xray() {
     touch /etc/vmess/.vmess.db
     touch /etc/vless/.vless.db
     touch /etc/trojan/.trojan.db
+    touch /etc/ssh/.ssh.db
+
     touch /etc/shadowsocks/.shadowsocks.db
 }
 
