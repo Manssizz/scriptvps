@@ -481,7 +481,7 @@ function finish(){
     #     reboot
     # fi
 }
-# cd /tmp
+cd /tmp
 FIGHTERTUNNEL
 first_setup
 dir_xray
@@ -489,5 +489,6 @@ add_domain
 install_all
 finish  
 
-# rm -rf * && rm ~/.bash_history
-# reboot
+rm ~/.bash_history
+sleep 10
+reboot
