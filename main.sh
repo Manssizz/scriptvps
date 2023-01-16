@@ -76,16 +76,15 @@ function first_setup(){
 
 ### Update and remove packages
 function base_package() {
-    sysctl -w net.ipv6.conf.all.disable_ipv6=1 && sysctl -w net.ipv6.conf.default.disable_ipv6=1  >/dev/null 2>&1
-    curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/gpg.key' | sudo gpg --dearmor -o /usr/share/keyrings/caddy-stable-archive-keyring.gpg --yes  >/dev/null 2>&1
-    curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/debian.deb.txt' | sudo tee /etc/apt/sources.list.d/caddy-stable.list  >/dev/null 2>&1
+    sysctl -w net.ipv6.conf.all.disable_ipv6=1 >/dev/null 2>&1
+    sysctl -w net.ipv6.conf.default.disable_ipv6=1  >/dev/null 2>&1
     sudo apt update
     sudo apt-get autoremove -y man-db apache2 ufw exim4 firewalld -y
     sudo add-apt-repository ppa:vbernat/haproxy-2.7 -y
     sudo apt update && apt upgrade -y
     sudo apt-get install -y --no-install-recommends software-properties-common
     sudo apt install squid nginx zip pwgen openssl netcat debian-keyring debian-archive-keyring bash-completion \
-    curl socat xz-utils wget apt-transport-https gnupg gnupg2 gnupg1 dnsutils socat caddy \
+    curl socat xz-utils wget apt-transport-https gnupg gnupg2 gnupg1 dnsutils socat \
     tar wget curl ruby zip unzip p7zip-full python3-pip haproxy libc6 util-linux build-essential \
     msmtp-mta ca-certificates bsd-mailx iptables iptables-persistent netfilter-persistent \
     net-tools  jq openvpn easy-rsa python3-certbot-nginx p7zip-full -y
@@ -135,7 +134,6 @@ function pasang_ssl() {
     mkdir /root/.acme.sh
     systemctl stop $STOPWEBSERVER
     systemctl stop nginx
-    systemctl stop caddy
     curl https://acme-install.netlify.app/acme.sh -o /root/.acme.sh/acme.sh
     chmod +x /root/.acme.sh/acme.sh
     /root/.acme.sh/acme.sh --upgrade --auto-upgrade
@@ -305,45 +303,6 @@ EOF
     chmod +x /etc/rc.local
 }
 
-### Tambah konfigurasi Caddy
-function caddy(){
-    mkdir -p /etc/caddy
-    wget -O /etc/caddy/vmess "${REPO}caddy/vmess" >/dev/null 2>&1
-    wget -O /etc/caddy/vless "${REPO}caddy/vless" >/dev/null 2>&1
-    wget -O /etc/caddy/trojan "${REPO}caddy/trojan" >/dev/null 2>&1
-    cat >/etc/caddy/Caddyfile <<-EOF
-$domain:443
-{
-    tls taibabi17@gmail.com
-    encode gzip
-
-    handle_path /vless {
-        reverse_proxy localhost:10001
-
-    }
-
-    import vmess
-    handle_path /vmess {
-        reverse_proxy localhost:10002
-    }
-
-    handle_path /trojan-ws {
-        reverse_proxy localhost:10003
-    }
-
-    handle_path /ss-ws {
-        reverse_proxy localhost:10004
-    }
-
-    handle {
-        reverse_proxy https://$domain {
-            trusted_proxies 0.0.0.0/0
-            header_up Host {upstream_hostport}
-        }
-    }
-}
-EOF
-}
 ### Tambahan
 function tambahan(){
     wget -O /usr/sbin/speedtest "${REPO}bin/speedtest" >/dev/null 2>&1
@@ -428,7 +387,6 @@ function enable_services(){
     systemctl enable --now haproxy
     systemctl enable --now netfilter-persistent
     systemctl enable --now squid
-    systemctl enable --now caddy
     systemctl enable ws
     systemctl restart ws
     systemctl enable client
@@ -447,7 +405,6 @@ function install_all() {
     install_ovpn >> /root/install.log
     install_slowdns >> /root/install.log
     download_config >> /root/install.log
-    caddy >> /root/install.log
     enable_services >> /root/install.log
     tambahan >> /root/install.log
     pasang_rclone >> /root/install.log
