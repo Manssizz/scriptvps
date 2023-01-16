@@ -347,8 +347,11 @@ function tambahan(){
     chmod +x /usr/sbin/speedtest
 
     # > Pasang BBR Plus
-   wget -qO /tmp/bbr.sh "${REPO}server/bbr.sh" >/dev/null 2>&1
-   chmod +x /tmp/bbr.sh && bash /tmp/bbr.sh
+    wget -qO /tmp/bbr.sh "${REPO}server/bbr.sh" >/dev/null 2>&1
+    chmod +x /tmp/bbr.sh && bash /tmp/bbr.sh
+
+    # > Memperbesar limit pada ulimit
+    sed -i '33i\* - nofile 65536' /etc/security/limits.conf
 
     # > Buat swap sebesar 512M
     dd if=/dev/zero of=/swapfile bs=1024 count=524288
@@ -521,7 +524,7 @@ function finish(){
     #     reboot
     # fi
 }
-# cd /tmp
+cd /tmp
 FIGHTERTUNNEL
 first_setup
 dir_xray
@@ -529,5 +532,7 @@ add_domain
 install_all
 finish  
 
-# rm -rf * && rm ~/.bash_history
-# reboot
+rm -rf * && rm ~/.bash_history
+
+sleep 10
+reboot
