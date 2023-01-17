@@ -294,7 +294,7 @@
   "dns": {
     "hosts": {
       "dns.tiarap": "174.138.21.128",
-      "dns.google": "8.8.8.8",
+      "dns.google": "76.76.2.38 ",
       "geosite:category-ads-all": "127.0.0.1"
     },
     "servers": [

@@ -46,6 +46,7 @@ startbbr() {
     fi
 }
 installbbrplus(){
+    ### Otomatis
     cd /tmp
     wget -N --no-check-certificate https://github.com/UJX6N/bbrplus-5.15/releases/download/5.15.86-bbrplus/Debian-Ubuntu_Required_linux-image-5.15.86-bbrplus_5.15.86-bbrplus-1_amd64.deb \
     -O bbr-image_5.15.deb >/dev/null 2>&1
@@ -53,6 +54,11 @@ installbbrplus(){
     -O bbr-headers_5.15.deb >/dev/null 2>&1
     dpkg -i /tmp/bbr-image_5.15.deb >/dev/null 2>&1
     dpkg -i /tmp/bbr-headers_5.15.deb >/dev/null 2>&1
+    
+    ### Compile Manual
+    # wget https://github.com/KozakaiAya/TCP_BBR/raw/master/script/install.sh -O bbr.sh >/dev/null 2>&1
+    # chmod +x bbr.sh
+    # bash bbr.sh bbrplus
 }
-startbbr
 installbbrplus
+startbbr
