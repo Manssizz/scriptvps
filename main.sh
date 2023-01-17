@@ -16,7 +16,6 @@ red='\e[1;31m'
 green='\e[0;32m'
 
 ### System Information
-
 TANGGAL=$(date '+%Y-%m-%d')
 TIMES="10"
 NAMES=$(whoami)
@@ -69,8 +68,7 @@ function first_setup(){
     chmod +x /etc/banner
     wget -O /etc/ssh/sshd_config ${REPO}config/sshd_config >/dev/null 2>&1
     chmod 644 /etc/ssh/sshd_config
-    sysctl -w net.ipv6.conf.all.disable_ipv6=1 >/dev/null 2>&1
-    sysctl -w net.ipv6.conf.default.disable_ipv6=1  >/dev/null 2>&1
+
     echo iptables-persistent iptables-persistent/autosave_v4 boolean true | debconf-set-selections
     echo iptables-persistent iptables-persistent/autosave_v6 boolean true | debconf-set-selections
     
@@ -78,16 +76,18 @@ function first_setup(){
 
 ### Update and remove packages
 function base_package() {
+    sysctl -w net.ipv6.conf.all.disable_ipv6=1 >/dev/null 2>&1
+    sysctl -w net.ipv6.conf.default.disable_ipv6=1  >/dev/null 2>&1
     sudo apt update
     sudo apt-get autoremove -y man-db apache2 ufw exim4 firewalld -y
     sudo add-apt-repository ppa:vbernat/haproxy-2.7 -y
     sudo apt update && apt upgrade -y
     sudo apt-get install -y --no-install-recommends software-properties-common
-    sudo apt install squid nginx zip pwgen openssl netcat debian-keyring debian-archive-keyring \
-    curl socat xz-utils wget apt-transport-https gnupg gnupg2 gnupg1 dnsutils socat stunnel4 \
+    sudo apt install squid nginx zip pwgen openssl netcat debian-keyring debian-archive-keyring bash-completion \
+    curl socat xz-utils wget apt-transport-https gnupg gnupg2 gnupg1 dnsutils socat \
     tar wget curl ruby zip unzip p7zip-full python3-pip haproxy libc6 util-linux build-essential \
     msmtp-mta ca-certificates bsd-mailx iptables iptables-persistent netfilter-persistent \
-    net-tools  jq openvpn easy-rsa python3-certbot-nginx p7zip-full bash-completion -y
+    net-tools  jq openvpn easy-rsa python3-certbot-nginx p7zip-full -y
     sudo apt-get autoremove -y
     apt-get clean all
 }
@@ -104,8 +104,7 @@ function dir_xray() {
     # mkdir -p /usr/sbin/xray/
     mkdir -p /var/log/xray/
     mkdir -p /var/www/html/
-    mkdir -p /etc/cendrawasih/{log,user}
-    mkdir -p /etc/stunnel/
+    mkdir -p /etc/cendrawasih/
 #    chmod +x /var/log/xray
     touch /var/log/xray/access.log
     touch /var/log/xray/error.log
@@ -212,22 +211,6 @@ function install_slowdns(){
 
 }
 
-### Pasang Stunnel
-function install_stunnel{
-    wget -O /etc/stunnel/stunnel.conf "${REPO}config/stunnel.conf" >/dev/null 2>&1
-
-    # Generate sertifikat
-    openssl genrsa -out key.pem 2048
-    openssl req -new -x509 -key key.pem -out cert.pem -days 1095 \
-    -subj "/C=ID/ST=Jakarta/L=Jakarta/O=Cendrawasih/OU=CendrawasihTunnel/CN=www.lompat.ga/emailAddress=taibabi@lompat.ga"
-    cat key.pem cert.pem >> /etc/stunnel/stunnel.pem
-    
-    # konfigurasi stunnel
-    sed -i 's/ENABLED=0/ENABLED=1/g' /etc/default/stunnel4
-
-}
-
-
 ### Pasang Rclone
 function pasang_rclone() {
     print_success "Installing Rclone"
@@ -250,9 +233,7 @@ function download_config(){
     wget -q -O /etc/default/dropbear "${REPO}config/dropbear" >/dev/null 2>&1
     chmod 644 /etc/default/dropbear
     wget -q -O /etc/banner "${REPO}config/banner" >/dev/null 2>&1
-    echo "/bin/false" >> /etc/shells
-    echo "/usr/sbin/nologin" >> /etc/shells
-
+    
     # > Add menu, thanks to Bhoikfost Yahya <3
     wget -O /tmp/menu-master.zip "${REPO}config/menu.zip" >/dev/null 2>&1
     mkdir /tmp/menu
@@ -317,7 +298,6 @@ cat >/etc/rc.local <<EOF
 iptables -I INPUT -p udp --dport 5300 -j ACCEPT
 iptables -t nat -I PREROUTING -p udp --dport 53 -j REDIRECT --to-ports 5300
 systemctl restart netfilter-persistent
-/bin/bash /usr/sbin/sshwss
 exit 0
 EOF
     chmod +x /etc/rc.local
@@ -329,8 +309,8 @@ function tambahan(){
     chmod +x /usr/sbin/speedtest
 
     # > Pasang BBR Plus
-    wget -qO /tmp/bbr.sh "${REPO}server/bbr.sh" >/dev/null 2>&1
-    chmod +x /tmp/bbr.sh && bash /tmp/bbr.sh
+   wget -qO /tmp/bbr.sh "${REPO}server/bbr.sh" >/dev/null 2>&1
+   chmod +x /tmp/bbr.sh && bash /tmp/bbr.sh
 
     # > Buat swap sebesar 512M
     dd if=/dev/zero of=/swapfile bs=1024 count=524288
@@ -407,10 +387,12 @@ function enable_services(){
     systemctl enable --now haproxy
     systemctl enable --now netfilter-persistent
     systemctl enable --now squid
-    systemctl enable --now stunnel4
-    systemctl enable --now ws
-    systemctl enable --now client
-    systemctl enable --now server
+    systemctl enable ws
+    systemctl restart ws
+    systemctl enable client
+    systemctl restart client
+    systemctl enable server
+    systemctl restart server
     wget -O /root/.config/rclone/rclone.conf "${REPO}rclone/rclone.conf" >/dev/null 2>&1
 }
 
@@ -422,7 +404,6 @@ function install_all() {
     install_xray >> /root/install.log
     install_ovpn >> /root/install.log
     install_slowdns >> /root/install.log
-    install_stunnel >> /root/install.log
     download_config >> /root/install.log
     enable_services >> /root/install.log
     tambahan >> /root/install.log
@@ -457,7 +438,7 @@ function finish(){
     echo "    │       >>> Service & Port                            │"
     echo "    │   - Open SSH                : 443, 80, 22           │"
     echo "    │   - DNS (SLOWDNS)           : 443, 80, 53           │"
-    echo "    │   - Dropbear                : 443, 109, 83          │"
+    echo "    │   - Dropbear                : 443, 109, 80          │"
     echo "    │   - Dropbear Websocket      : 443, 109              │"
     echo "    │   - SSH Websocket SSL       : 443                   │"
     echo "    │   - SSH Websocket           : 80                    │"
