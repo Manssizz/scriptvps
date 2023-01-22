@@ -1,14 +1,7 @@
-```
-====================================================================
-                                                 P R O J E C T  O F 
- ▒█▀▀█ ▒█▀▀▀ ▒█▄░▒█ ▒█▀▀▄ ▒█▀▀█ ░█▀▀█ ▒█░░▒█ ░█▀▀█ ▒█▀▀▀█ ▀█▀ ▒█░▒█ 
- ▒█░░░ ▒█▀▀▀ ▒█▒█▒█ ▒█░▒█ ▒█▄▄▀ ▒█▄▄█ ▒█▒█▒█ ▒█▄▄█ ░▀▀▀▄▄ ▒█░ ▒█▀▀█
- ▒█▄▄█ ▒█▄▄▄ ▒█░░▀█ ▒█▄▄▀ ▒█░▒█ ▒█░▒█ ▒█▄▀▄█ ▒█░▒█ ▒█▄▄▄█ ▄█▄ ▒█░▒█ 
-                         [Freedom Internet]
-====================================================================
-              https://github.com/manssizz/scriptvps
-====================================================================
-```
+<h1 align="center">
+  <a href="https://github.com/manssizz/scriptvps"><img src="https://i.imgur.com/CdNhEj3.png" alt="LOGO"></a>
+</h1>
+
 ### PERHATIAN
 - Terima kasih untuk tidak menjual maupun mengenkripsi skrip ini. Saya mendapatkan secara gratis, jadi saya ataupun kalian harus berbagi secara gratis.
 - Script ini **tidak direkomendasikan untuk bermain game**.
