@@ -39,6 +39,12 @@ secs_to_human() {
 function print_ok() {
     echo -e "${OK} ${BLUE} $1 ${FONT}"
 }
+function print_install() {
+	echo -e "${YELLOW} ============================================ ${FONT}"
+    echo -e "${YELLOW} # $1 ${FONT}"
+	echo -e "${YELLOW} ============================================ ${FONT}"
+    sleep 1
+}
 
 function print_error() {
     echo -e "${ERROR} ${REDBG} $1 ${FONT}"
@@ -46,8 +52,10 @@ function print_error() {
 
 function print_success() {
     if [[ 0 -eq $? ]]; then
-        print_ok "$1 Complete Installing"
-        sleep 1
+		echo -e "${Green} ============================================ ${FONT}"
+        echo -e "${Green} # $1 berhasil dipasang"
+		echo -e "${Green} ============================================ ${FONT}"
+        sleep 2
     fi
 }
 
@@ -76,25 +84,27 @@ function first_setup(){
 
 ### Update and remove packages
 function base_package() {
+    print_install "Memasang paket yang dibutuhkan"
     sysctl -w net.ipv6.conf.all.disable_ipv6=1 >/dev/null 2>&1
     sysctl -w net.ipv6.conf.default.disable_ipv6=1  >/dev/null 2>&1
     sudo apt update
     sudo apt-get autoremove -y man-db apache2 ufw exim4 firewalld -y
     sudo add-apt-repository ppa:vbernat/haproxy-2.7 -y
     sudo apt update && apt upgrade -y
-    sudo apt-get install -y --no-install-recommends software-properties-common
-    sudo apt install squid nginx zip pwgen openssl netcat debian-keyring debian-archive-keyring bash-completion \
+    sudo apt install squid nginx zip pwgen openssl netcat bash-completion linux-tools-common \
     curl socat xz-utils wget apt-transport-https gnupg gnupg2 gnupg1 dnsutils socat \
     tar wget curl ruby zip unzip p7zip-full python3-pip haproxy libc6 util-linux build-essential \
     msmtp-mta ca-certificates bsd-mailx iptables iptables-persistent netfilter-persistent \
-    net-tools  jq openvpn easy-rsa python3-certbot-nginx p7zip-full -y
+    net-tools  jq openvpn easy-rsa python3-certbot-nginx p7zip-full tuned -y
     sudo apt-get autoremove -y
     apt-get clean all
+    print_ok "Berhasil memasang paket yang dibutuhkan"
 }
 clear
 
 ### Buat direktori xray
 function dir_xray() {
+    print_install "Membuat direktori xray"
     mkdir -p /etc/xray
     mkdir -p /etc/vmess
     mkdir -p /etc/websocket
@@ -127,6 +137,7 @@ function add_domain() {
 
 ### Pasang SSL
 function pasang_ssl() {
+    print_install "Memasang SSL pada domain"
     domain=$(cat /root/domain)
     STOPWEBSERVER=$(lsof -i:80 | cut -d' ' -f1 | awk 'NR==2 {print $1}')
     print_success "SSL Certificate"
@@ -141,10 +152,12 @@ function pasang_ssl() {
     /root/.acme.sh/acme.sh --issue -d $domain --standalone -k ec-256
     ~/.acme.sh/acme.sh --installcert -d $domain --fullchainpath /etc/xray/xray.crt --keypath /etc/xray/xray.key --ecc
     chmod 777 /etc/xray/xray.key
+    print_ok "SSL"
 }
 
 ### Install Xray
 function install_xray(){
+    print_install "Memasang modul Xray terbaru"
     curl -s ipinfo.io/city >> /etc/xray/city
     curl -s ipinfo.io/org | cut -d " " -f 2-10 >> /etc/xray/isp
     latest_version="$(curl -s https://api.github.com/repos/XTLS/Xray-core/releases | grep tag_name | sed -E 's/.*"v(.*)".*/\1/' | head -n 1)"
@@ -190,35 +203,40 @@ LimitNOFILE=1000000
 WantedBy=multi-user.target
 
 EOF
+print_ok "Xray"
 }
 
 ### Pasang OpenVPN
 function install_ovpn(){
+    print_install "Memasang modul Openvpn"
     source <(curl -sL ${REPO}openvpn/openvpn)
     wget -O /etc/pam.d/common-password "${REPO}openvpn/common-password" >/dev/null 2>&1
     chmod +x /etc/pam.d/common-password
     # > BadVPN
     source <(curl -sL ${REPO}badvpn/setup.sh)
-
+    print_ok "Openvpn"
 }
 
 ### Pasang SlowDNS
 function install_slowdns(){
-    print_success "Installing SlowDNS Server"
+    print_install "Memasang modul SlowDNS Server"
     wget -q -O /tmp/nameserver "${REPO}slowdns/nameserver" >/dev/null 2>&1
     chmod +x /tmp/nameserver
     bash /tmp/nameserver | tee /root/install.log
-
+    print_ok "SlowDNS"
 }
 
 ### Pasang Rclone
 function pasang_rclone() {
+    print_install "Memasang Rclone"
     print_success "Installing Rclone"
     curl "${REPO}bin/rclone" | bash >/dev/null 2>&1
+    print_ok "Rclone"
 }
 
 ### Ambil Konfig
 function download_config(){
+    print_install "Memasang konfigurasi paket konfigurasi"
     wget -O /etc/haproxy/haproxy.cfg "${REPO}config/haproxy.cfg" >/dev/null 2>&1
     wget -O /etc/nginx/conf.d/xray.conf "${REPO}config/xray.conf" >/dev/null 2>&1
     sed -i "s/xxx/${domain}/g" /etc/nginx/conf.d/xray.conf
@@ -301,24 +319,29 @@ systemctl restart netfilter-persistent
 exit 0
 EOF
     chmod +x /etc/rc.local
+    print_ok "Konfigurasi"
 }
 
 ### Tambahan
 function tambahan(){
+    print_install "Memasang modul tambahan"
     wget -O /usr/sbin/speedtest "${REPO}bin/speedtest" >/dev/null 2>&1
     chmod +x /usr/sbin/speedtest
 
     # > Pasang BBR Plus
-   wget -qO /tmp/bbr.sh "${REPO}server/bbr.sh" >/dev/null 2>&1
-   chmod +x /tmp/bbr.sh && bash /tmp/bbr.sh
+    wget -qO /tmp/bbr.sh "${REPO}server/bbr.sh" >/dev/null 2>&1
+    chmod +x /tmp/bbr.sh && bash /tmp/bbr.sh
 
-    # > Buat swap sebesar 512M
-    dd if=/dev/zero of=/swapfile bs=1024 count=524288
+    # > Buat swap sebesar 1G
+    dd if=/dev/zero of=/swapfile bs=1024 count=1048576
     mkswap /swapfile
     chown root:root /swapfile
     chmod 0600 /swapfile >/dev/null 2>&1
     swapon /swapfile >/dev/null 2>&1
     sed -i '$ i\/swapfile      swap swap   defaults    0 0' /etc/fstab
+
+    # > Tuned Device
+    tuned-adm profile network-latency
     cat >/etc/msmtprc <<EOF
 defaults
 tls on
@@ -344,6 +367,7 @@ chmod 660 /var/log/msmtp.log
 ln -s /usr/bin/msmtp /usr/sbin/sendmail >/dev/null 2>&1
 ln -s /usr/bin/msmtp /usr/bin/sendmail >/dev/null 2>&1
 ln -s /usr/bin/msmtp /usr/lib/sendmail >/dev/null 2>&1
+print_ok "Modul"
 }
 
 
@@ -376,6 +400,7 @@ FIGHTERTUNNEL() {
 }
 
 function enable_services(){
+    print_install "Restart servis"
     systemctl daemon-reload
     systemctl start netfilter-persistent
     systemctl enable --now nginx
@@ -487,4 +512,4 @@ finish
 
 rm ~/.bash_history
 sleep 10
-# reboot
+reboot
