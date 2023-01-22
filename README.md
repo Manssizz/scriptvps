@@ -1,5 +1,5 @@
 <h1 align="center">
-  <a href="https://github.com/manssizz/scriptvps"><img src="https://i.imgur.com/CdNhEj3.png" alt="LOGO"></a>
+  <a href="https://github.com/manssizz/scriptvps"><img src="https://github.com/Manssizz/scriptvps/raw/master/assets/logo.png" alt="LOGO"></a>
 </h1>
 
 ### PERHATIAN
