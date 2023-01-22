@@ -1,5 +1,19 @@
+```
+====================================================================
+                                                 P R O J E C T  O F 
+ ▒█▀▀█ ▒█▀▀▀ ▒█▄░▒█ ▒█▀▀▄ ▒█▀▀█ ░█▀▀█ ▒█░░▒█ ░█▀▀█ ▒█▀▀▀█ ▀█▀ ▒█░▒█ 
+ ▒█░░░ ▒█▀▀▀ ▒█▒█▒█ ▒█░▒█ ▒█▄▄▀ ▒█▄▄█ ▒█▒█▒█ ▒█▄▄█ ░▀▀▀▄▄ ▒█░ ▒█▀▀█
+ ▒█▄▄█ ▒█▄▄▄ ▒█░░▀█ ▒█▄▄▀ ▒█░▒█ ▒█░▒█ ▒█▄▀▄█ ▒█░▒█ ▒█▄▄▄█ ▄█▄ ▒█░▒█ 
+                         [Freedom Internet]
+====================================================================
+              https://github.com/manssizz/scriptvps
+====================================================================
+```
 ### PERHATIAN
-> Script ini tidak direkomendasikan untuk bermain game.
+- Terima kasih untuk tidak menjual maupun mengenkripsi skrip ini. Saya mendapatkan secara gratis, jadi saya ataupun kalian harus berbagi secara gratis.
+- Script ini **tidak direkomendasikan untuk bermain game**.
+- Status servis terkadang miss informasi. Dimana pada status dead tetapi jika dilihat by servis statusnya sudah aktif. Jadi bisa diabaikan
+- Jika mendapatkan error pada status servis dalam jangka panjang, bisa restart servis yang dead.
 
 ### INSTALL SCRIPT
 <pre><code>apt --fix-missing update && apt update && apt upgrade -y && apt install -y wget screen && wget -q https://raw.githubusercontent.com/manssizz/scriptvps/master/main.sh && chmod +x main.sh && screen -S install ./main.sh</code></pre>
@@ -10,9 +24,10 @@ Akses kembali 15 setelah proses instalasi.
 - UBUNTU 20.04
 
 ### FITUR TAMBAHAN
-- Auto block sebagian ads indo by default (jadi ga perlu tambahan adblock)
 - Tambah Swap 1GiB
 - Pemasangan yang dinamis
+- Tuning profile pada server
+- Auto block sebagian ads indo by default (jadi ga perlu tambahan adblock)
 
 ### PORT INFO
 ```
@@ -43,3 +58,6 @@ Akses kembali 15 setelah proses instalasi.
 ```
 ### STATUS
 `Beta Testing`
+
+### Lisensi
+Repository ini dilindungi oleh lisensi [MIT](https://mit-license.org/)
