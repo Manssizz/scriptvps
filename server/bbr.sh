@@ -43,6 +43,7 @@ startbbr() {
         echo "net.core.netdev_max_backlog = 10240" >>/etc/sysctl.conf
         echo "net.ipv4.tcp_slow_start_after_idle = 0" >>/etc/sysctl.conf
         echo "net.ipv4.ip_forward = 1" >>/etc/sysctl.conf
+        echo "net.netfilter.nf_conntrack_max = 524288" >>/etc/sysctl.conf
     fi
 }
 installbbrplus(){
