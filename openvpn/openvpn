@@ -2,7 +2,8 @@
 export DEBIAN_FRONTEND=noninteractive
 OS=`uname -m`;
 MYIP=$(wget -qO- ipinfo.io/ip);
-MYIP2="s/xxxxxxxxx/$MYIP/g";
+DOMAIN=`cat /etc/xray/domain`
+ADDR="s/xxxxxxxxx/$DOMAIN/g";
 
 function ovpn_install() {
     rm -rf /etc/openvpn
@@ -40,7 +41,7 @@ comp-lzo
 verb 0
 END
     
-    sed -i $MYIP2 /etc/openvpn/tcp.ovpn;
+    sed -i $ADDR /etc/openvpn/tcp.ovpn;
 cat > /etc/openvpn/udp.ovpn <<-END
 client
 dev tun
@@ -56,7 +57,7 @@ comp-lzo
 verb 0
 END
     
-    sed -i $MYIP2 /etc/openvpn/udp.ovpn;
+    sed -i $ADDR /etc/openvpn/udp.ovpn;
 cat > /etc/openvpn/ws-ssl.ovpn <<-END
 client
 dev tun
@@ -71,7 +72,7 @@ auth-user-pass
 comp-lzo
 verb 0
 END
-    sed -i $MYIP2 /etc/openvpn/ws-ssl.ovpn;
+    sed -i $ADDR /etc/openvpn/ws-ssl.ovpn;
 cat > /etc/openvpn/ssl.ovpn <<-END
 client
 dev tun
@@ -86,23 +87,23 @@ auth-user-pass
 comp-lzo
 verb 0
 END
-    sed -i $MYIP2 /etc/openvpn/ssl.ovpn;
+    sed -i $ADDR /etc/openvpn/ssl.ovpn;
 }
 function cert_ovpn() {
     echo '<ca>' >> /etc/openvpn/tcp.ovpn
-    cat /etc/openvpn/server/ca.crt >> /etc/openvpn/tcp.ovpn
+    cat /etc/openvpn/server/ca.crt >> /etc/openvpn/"$DOMAIN"-tcp.ovpn
     echo '</ca>' >> /etc/openvpn/tcp.ovpn
-    cp /etc/openvpn/tcp.ovpn /var/www/html/tcp.ovpn
+    cp /etc/openvpn/tcp.ovpn /var/www/html/"$DOMAIN"-tcp.ovpn
     echo '<ca>' >> /etc/openvpn/udp.ovpn
-    cat /etc/openvpn/server/ca.crt >> /etc/openvpn/udp.ovpn
+    cat /etc/openvpn/server/ca.crt >> /etc/openvpn/"$DOMAIN"-udp.ovpn
     echo '</ca>' >> /etc/openvpn/udp.ovpn
-    cp /etc/openvpn/udp.ovpn /var/www/html/udp.ovpn
+    cp /etc/openvpn/udp.ovpn /var/www/html/"$DOMAIN"-udp.ovpn
     echo '<ca>' >> /etc/openvpn/ws-ssl.ovpn
-    cat /etc/openvpn/server/ca.crt >> /etc/openvpn/ws-ssl.ovpn
+    cat /etc/openvpn/server/ca.crt >> /etc/openvpn/"$DOMAIN"-ws-ssl.ovpn
     echo '</ca>' >> /etc/openvpn/ws-ssl.ovpn
-    cp /etc/openvpn/ws-ssl.ovpn /var/www/html/ws-ssl.ovpn
+    cp /etc/openvpn/ws-ssl.ovpn /var/www/html/"$DOMAIN"-ws-ssl.ovpn
     echo '</ca>' >> /etc/openvpn/ssl.ovpn
-    cp /etc/openvpn/ws-ssl.ovpn /var/www/html/ssl.ovpn
+    cp /etc/openvpn/ws-ssl.ovpn /var/www/html/"$DOMAIN"-ssl.ovpn
 }
 
 function install_ovpn() {
@@ -111,9 +112,7 @@ function install_ovpn() {
     make_follow
     make_follow
     cert_ovpn
-    systemctl enable openvpn
-    systemctl start openvpn
-    /etc/init.d/openvpn restart
+    systemctl enable --now openvpn
     
 }
 install_ovpn
