@@ -26,7 +26,7 @@ function config_easy() {
 function make_follow() {
     echo 1 > /proc/sys/net/ipv4/ip_forward
     sed -i 's/#net.ipv4.ip_forward=1/net.ipv4.ip_forward=1/g' /etc/sysctl.conf
-cat > /etc/openvpn/tcp.ovpn <<-END
+cat > /etc/openvpn/"$DOMAIN"-tcp.ovpn <<-END
 client
 dev tun
 proto tcp
@@ -41,8 +41,8 @@ comp-lzo
 verb 0
 END
     
-    sed -i $ADDR /etc/openvpn/tcp.ovpn;
-cat > /etc/openvpn/udp.ovpn <<-END
+    sed -i $ADDR /etc/openvpn/"$DOMAIN"-tcp.ovpn;
+cat > /etc/openvpn/"$DOMAIN"-udp.ovpn <<-END
 client
 dev tun
 proto udp
@@ -57,8 +57,8 @@ comp-lzo
 verb 0
 END
     
-    sed -i $ADDR /etc/openvpn/udp.ovpn;
-cat > /etc/openvpn/ws-ssl.ovpn <<-END
+    sed -i $ADDR /etc/openvpn/"$DOMAIN"-udp.ovpn;
+cat > /etc/openvpn/"$DOMAIN"-ws-ssl.ovpn <<-END
 client
 dev tun
 proto tcp
@@ -72,8 +72,8 @@ auth-user-pass
 comp-lzo
 verb 0
 END
-    sed -i $ADDR /etc/openvpn/ws-ssl.ovpn;
-cat > /etc/openvpn/ssl.ovpn <<-END
+    sed -i $ADDR /etc/openvpn/"$DOMAIN"-ws-ssl.ovpn;
+cat > /etc/openvpn/"$DOMAIN"-ssl.ovpn <<-END
 client
 dev tun
 proto tcp
@@ -87,23 +87,22 @@ auth-user-pass
 comp-lzo
 verb 0
 END
-    sed -i $ADDR /etc/openvpn/ssl.ovpn;
+    sed -i $ADDR /etc/openvpn/"$DOMAIN"-ssl.ovpn;
 }
 function cert_ovpn() {
-    echo '<ca>' >> /etc/openvpn/tcp.ovpn
+    echo '<ca>' >> /etc/openvpn/"$DOMAIN"-tcp.ovpn
     cat /etc/openvpn/server/ca.crt >> /etc/openvpn/"$DOMAIN"-tcp.ovpn
-    echo '</ca>' >> /etc/openvpn/tcp.ovpn
-    cp /etc/openvpn/tcp.ovpn /var/www/html/"$DOMAIN"-tcp.ovpn
-    echo '<ca>' >> /etc/openvpn/udp.ovpn
+    echo '</ca>' >> /etc/openvpn/"$DOMAIN"-tcp.ovpn
+    echo '<ca>' >> /etc/openvpn/"$DOMAIN"-udp.ovpn
     cat /etc/openvpn/server/ca.crt >> /etc/openvpn/"$DOMAIN"-udp.ovpn
-    echo '</ca>' >> /etc/openvpn/udp.ovpn
-    cp /etc/openvpn/udp.ovpn /var/www/html/"$DOMAIN"-udp.ovpn
-    echo '<ca>' >> /etc/openvpn/ws-ssl.ovpn
+    echo '</ca>' >> /etc/openvpn/"$DOMAIN"-udp.ovpn
+    echo '<ca>' >> /etc/openvpn/"$DOMAIN"-ws-ssl.ovpn
     cat /etc/openvpn/server/ca.crt >> /etc/openvpn/"$DOMAIN"-ws-ssl.ovpn
-    echo '</ca>' >> /etc/openvpn/ws-ssl.ovpn
-    cp /etc/openvpn/ws-ssl.ovpn /var/www/html/"$DOMAIN"-ws-ssl.ovpn
-    echo '</ca>' >> /etc/openvpn/ssl.ovpn
-    cp /etc/openvpn/ws-ssl.ovpn /var/www/html/"$DOMAIN"-ssl.ovpn
+    echo '</ca>' >> /etc/openvpn/"$DOMAIN"-ws-ssl.ovpn
+    cp /etc/openvpn/"$DOMAIN"-tcp.ovpn /var/www/html/"$DOMAIN"-tcp.ovpn
+    cp /etc/openvpn/"$DOMAIN"-udp.ovpn /var/www/html/"$DOMAIN"-udp.ovpn
+    cp /etc/openvpn/"$DOMAIN"-ws-ssl.ovpn /var/www/html/"$DOMAIN"-ws-ssl.ovpn
+    cp /etc/openvpn/"$DOMAIN"-ws-ssl.ovpn /var/www/html/"$DOMAIN"-ssl.ovpn
 }
 
 function install_ovpn() {
