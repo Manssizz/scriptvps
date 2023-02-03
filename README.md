@@ -20,7 +20,7 @@ Akses kembali 15 setelah proses instalasi.
 - Tambah Swap 1GiB
 - Pemasangan yang dinamis
 - Tuning profile pada server
-- Auto block sebagian ads indo by default (jadi ga perlu tambahan adblock)
+- Auto block sebagian ads indo by default (remove)
 
 ### PORT INFO
 ```
