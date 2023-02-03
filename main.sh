@@ -246,6 +246,9 @@ function download_config(){
     echo "visible_hostname $(cat /etc/xray/domain)" /etc/squid/squid.conf
     mkdir -p /var/log/squid/cache/
     chmod 777 /var/log/squid/cache/
+    echo "* - nofile 65535" >> /etc/security/limits.conf
+    mkdir -p /etc/sysconfig/
+    echo "ulimit -n 65535" >> /etc/sysconfig/squid
 
     # > Add Dropbear
     apt install dropbear -y
