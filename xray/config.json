@@ -293,16 +293,16 @@
   },
   "dns": {
     "hosts": {
-      "dns.google": "8.8.8.8",
+      "dns.tiarap": "174.138.21.128",
       "geosite:category-ads-all": "127.0.0.1"
     },
     "servers": [
       {
-        "address": "https://dns.google/dns-query",
+        "address": "https://doh.tiar.app/dns-query",
         "domains": ["geosite:geolocation-!id"],
         "expectIPs": ["geoip:!id"]
       },
-      "8.8.8.8",
+      "174.138.21.128",
       {
         "address": "1.1.1.1",
         "port": 53,
@@ -358,7 +358,7 @@
       "settings": {
         "port": 53,
         "network": "udp",
-        "address": "8.8.8.8"
+        "address": "174.138.21.128"
       },
       "tag": "dns-in",
       "listen": "127.0.0.1"
