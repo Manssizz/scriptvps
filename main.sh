@@ -156,17 +156,18 @@ function pasang_ssl() {
     print_ok "SSL"
 }
 
-### Install Xray
+### Install Xray by Dharak36
+### https://github.com/dharak36/Xray-core
 function install_xray(){
     print_install "Memasang modul Xray terbaru"
     curl -s ipinfo.io/city >> /etc/xray/city
     curl -s ipinfo.io/org | cut -d " " -f 2-10 >> /etc/xray/isp
-    xray_latest="$(curl -s https://api.github.com/repos/XTLS/Xray-core/releases | grep tag_name | sed -E 's/.*"v(.*)".*/\1/' | head -n 1)"
-    xraycore_link="https://github.com/XTLS/Xray-core/releases/download/v$xray_latest/xray-linux-64.zip"
-    curl -sL "$xraycore_link" -o xray.zip
-    unzip -q xray.zip && rm -rf xray.zip
+    xray_latest="$(curl -s https://api.github.com/repos/dharak36/Xray-core/releases | grep tag_name | sed -E 's/.*"v(.*)".*/\1/' | head -n 1)"
+    xraycore_link="https://github.com/dharak36/Xray-core/releases/download/v$xray_latest/xray-linux-64"
+    curl -sL "$xraycore_link" -o xray
+#    unzip -q xray.zip && rm -rf xray.zip
     mv xray /usr/sbin/xray
-    print_success "Xray Core"
+    print_success "Berhasil memasang modul Xray Core"
     cat /etc/xray/xray.crt /etc/xray/xray.key | tee /etc/haproxy/xray.pem
     wget -O /etc/xray/config.json "${REPO}xray/config.json" >/dev/null 2>&1 
     #wget -O /usr/sbin/xray/ "${REPO}bin/xray" >/dev/null 2>&1
