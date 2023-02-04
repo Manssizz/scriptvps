@@ -163,7 +163,7 @@ function install_xray(){
     curl -s ipinfo.io/city >> /etc/xray/city
     curl -s ipinfo.io/org | cut -d " " -f 2-10 >> /etc/xray/isp
     xray_latest="$(curl -s https://api.github.com/repos/dharak36/Xray-core/releases | grep tag_name | sed -E 's/.*"v(.*)".*/\1/' | head -n 1)"
-    xraycore_link="https://github.com/dharak36/Xray-core/releases/download/v$xray_latest/xray-linux-64"
+    xraycore_link="https://github.com/dharak36/Xray-core/releases/download/v$xray_latest/xray.linux.64bit "
     curl -sL "$xraycore_link" -o xray
 #    unzip -q xray.zip && rm -rf xray.zip
     mv xray /usr/sbin/xray
