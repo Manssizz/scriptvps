@@ -20,7 +20,7 @@ Akses kembali 15 setelah proses instalasi.
 - Tambah Swap 1GiB
 - Pemasangan yang dinamis
 - Tuning profile pada server
-- Auto block sebagian ads indo by default (remove)
+- Auto block sebagian ads indo by default
 
 ### PORT INFO
 ```
@@ -54,3 +54,6 @@ Akses kembali 15 setelah proses instalasi.
 
 ### Lisensi
 Repository ini dilindungi oleh lisensi [MIT](https://mit-license.org/)
+
+### Credits
+- [Dharak36](https://github.com/dharak36/Xray-core)
