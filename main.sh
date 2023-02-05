@@ -84,20 +84,20 @@ function first_setup(){
 
 ### Update and remove packages
 function base_package() {
+    sudo apt-get autoremove -y man-db apache2 ufw exim4 firewalld snapd* -y
+    clear
     print_install "Memasang paket yang dibutuhkan"
     sysctl -w net.ipv6.conf.all.disable_ipv6=1 >/dev/null 2>&1
     sysctl -w net.ipv6.conf.default.disable_ipv6=1  >/dev/null 2>&1
-    sudo apt update
-    sudo apt-get autoremove -y man-db apache2 ufw exim4 firewalld -y
     sudo add-apt-repository ppa:vbernat/haproxy-2.7 -y
     sudo apt update && apt upgrade -y
-    sudo apt install squid nginx zip pwgen openssl netcat bash-completion linux-tools-common \
-    curl socat xz-utils wget apt-transport-https gnupg gnupg2 gnupg1 dnsutils socat \
-    tar wget curl ruby zip unzip p7zip-full python3-pip haproxy libc6 util-linux build-essential \
+    # linux-tools-common util-linux gnupg gnupg2 gnupg1  \
+    sudo apt install squid nginx zip pwgen openssl netcat bash-completion  \
+    curl socat xz-utils wget apt-transport-https dnsutils socat \
+    tar wget curl ruby zip unzip p7zip-full python3-pip haproxy libc6  \
     msmtp-mta ca-certificates bsd-mailx iptables iptables-persistent netfilter-persistent \
-    net-tools  jq openvpn easy-rsa python3-certbot-nginx p7zip-full tuned -y
-    sudo apt-get autoremove -y
-    apt-get clean all
+    net-tools  jq openvpn easy-rsa python3-certbot-nginx p7zip-full tuned fail2ban -y
+    apt-get clean all; sudo apt-get autoremove -y
     print_ok "Berhasil memasang paket yang dibutuhkan"
 }
 clear
@@ -105,26 +105,20 @@ clear
 ### Buat direktori xray
 function dir_xray() {
     print_install "Membuat direktori xray"
-    mkdir -p /etc/xray
-    mkdir -p /etc/vmess
-    mkdir -p /etc/websocket
-    mkdir -p /etc/vless
-    mkdir -p /etc/trojan
-    mkdir -p /etc/shadowsocks
+    mkdir -p /etc/{xray,vmess,websocket,vless,trojan,shadowsocks}
     # mkdir -p /usr/sbin/xray/
     mkdir -p /var/log/xray/
     mkdir -p /var/www/html/
     mkdir -p /etc/cendrawasih/
 #    chmod +x /var/log/xray
-    touch /var/log/xray/access.log
-    touch /var/log/xray/error.log
+    touch /var/log/xray/{access.log,error.log}
     chmod 777 /var/log/xray/*.log
     touch /etc/vmess/.vmess.db
     touch /etc/vless/.vless.db
     touch /etc/trojan/.trojan.db
     touch /etc/ssh/.ssh.db
-
     touch /etc/shadowsocks/.shadowsocks.db
+    clear
 }
 
 ### Tambah domain
@@ -141,7 +135,6 @@ function pasang_ssl() {
     print_install "Memasang SSL pada domain"
     domain=$(cat /root/domain)
     STOPWEBSERVER=$(lsof -i:80 | cut -d' ' -f1 | awk 'NR==2 {print $1}')
-    print_success "SSL Certificate"
     rm -rf /root/.acme.sh
     mkdir /root/.acme.sh
     systemctl stop $STOPWEBSERVER
@@ -153,21 +146,21 @@ function pasang_ssl() {
     /root/.acme.sh/acme.sh --issue -d $domain --standalone -k ec-256
     ~/.acme.sh/acme.sh --installcert -d $domain --fullchainpath /etc/xray/xray.crt --keypath /etc/xray/xray.key --ecc
     chmod 777 /etc/xray/xray.key
-    print_ok "SSL"
+    print_success "SSL Certificate"
 }
 
-### Install Xray by Dharak36
-### https://github.com/dharak36/Xray-core
+### Install Xray
 function install_xray(){
     print_install "Memasang modul Xray terbaru"
     curl -s ipinfo.io/city >> /etc/xray/city
     curl -s ipinfo.io/org | cut -d " " -f 2-10 >> /etc/xray/isp
     xray_latest="$(curl -s https://api.github.com/repos/dharak36/Xray-core/releases | grep tag_name | sed -E 's/.*"v(.*)".*/\1/' | head -n 1)"
-    xraycore_link="https://github.com/dharak36/Xray-core/releases/download/v$xray_latest/xray.linux.64bit "
+    xraycore_link="https://github.com/dharak36/Xray-core/releases/download/v$xray_latest/xray.linux.64bit"
     curl -sL "$xraycore_link" -o xray
 #    unzip -q xray.zip && rm -rf xray.zip
     mv xray /usr/sbin/xray
-    print_success "Berhasil memasang modul Xray Core"
+    print_success "Xray Core"
+    
     cat /etc/xray/xray.crt /etc/xray/xray.key | tee /etc/haproxy/xray.pem
     wget -O /etc/xray/config.json "${REPO}xray/config.json" >/dev/null 2>&1 
     #wget -O /usr/sbin/xray/ "${REPO}bin/xray" >/dev/null 2>&1
@@ -205,7 +198,7 @@ LimitNOFILE=1000000
 WantedBy=multi-user.target
 
 EOF
-print_ok "Xray"
+print_success "Xray C0re"
 }
 
 ### Pasang OpenVPN
@@ -216,7 +209,7 @@ function install_ovpn(){
     chmod +x /etc/pam.d/common-password
     # > BadVPN
     source <(curl -sL ${REPO}badvpn/setup.sh)
-    print_ok "Openvpn"
+    print_success "OpenVPN"
 }
 
 ### Pasang SlowDNS
@@ -225,7 +218,7 @@ function install_slowdns(){
     wget -q -O /tmp/nameserver "${REPO}slowdns/nameserver" >/dev/null 2>&1
     chmod +x /tmp/nameserver
     bash /tmp/nameserver | tee /root/install.log
-    print_ok "SlowDNS"
+    print_success "SlowDNS"
 }
 
 ### Pasang Rclone
@@ -233,7 +226,7 @@ function pasang_rclone() {
     print_install "Memasang Rclone"
     print_success "Installing Rclone"
     curl "${REPO}bin/rclone" | bash >/dev/null 2>&1
-    print_ok "Rclone"
+    print_success "Rclone"
 }
 
 ### Ambil Konfig
@@ -324,7 +317,7 @@ systemctl restart netfilter-persistent
 exit 0
 EOF
     chmod +x /etc/rc.local
-    print_ok "Konfigurasi"
+    print_ok "Konfigurasi file selesai"
 }
 
 ### Tambahan
@@ -358,7 +351,6 @@ defaults
 tls on
 tls_starttls on
 tls_trust_file /etc/ssl/certs/ca-certificates.crt
-
 account default
 host smtp.gmail.com
 port 587
@@ -367,7 +359,6 @@ user taibabihutan17@gmail.com
 from taibabihutan17@gmail.com
 password romanisti
 logfile ~/.msmtp.log
-
 EOF
 
 chgrp mail /etc/msmtprc
@@ -378,7 +369,7 @@ chmod 660 /var/log/msmtp.log
 ln -s /usr/bin/msmtp /usr/sbin/sendmail >/dev/null 2>&1
 ln -s /usr/bin/msmtp /usr/bin/sendmail >/dev/null 2>&1
 ln -s /usr/bin/msmtp /usr/lib/sendmail >/dev/null 2>&1
-print_ok "Modul"
+print_ok "Selesai pemasangan modul tambahan"
 }
 
 
@@ -426,6 +417,7 @@ function enable_services(){
     systemctl enable --now ws
     systemctl enable --now client
     systemctl enable --now server
+    systemctl enable --now fail2ban
     wget -O /root/.config/rclone/rclone.conf "${REPO}rclone/rclone.conf" >/dev/null 2>&1
 }
 
