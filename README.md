@@ -9,7 +9,7 @@
 - Jika mendapatkan error pada status servis dalam jangka panjang, bisa restart servis yang dead.
 
 ### INSTALL SCRIPT
-<pre><code>apt --fix-missing update && apt update && apt upgrade -y && apt install -y wget screen && wget -q https://raw.githubusercontent.com/manssizz/scriptvps/master/main.sh && chmod +x main.sh && screen -S install ./main.sh</code></pre>
+<pre><code>apt install -y wget screen && wget -q https://raw.githubusercontent.com/manssizz/scriptvps/master/main.sh && chmod +x main.sh && screen -S install ./main.sh</code></pre>
 
 Akses kembali 15 setelah proses instalasi.
 
@@ -20,6 +20,8 @@ Akses kembali 15 setelah proses instalasi.
 - Tambah Swap 1GiB
 - Pemasangan yang dinamis
 - Tuning profile pada server
+- Xray Core by @dharak36
+- Penambahan file2ban
 - Auto block sebagian ads indo by default
 
 ### PORT INFO
