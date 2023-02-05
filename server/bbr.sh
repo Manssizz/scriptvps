@@ -48,9 +48,9 @@ startbbr() {
 }
 installbbrplus(){
 		cd /tmp
-		wget -N --no-check-certificate https://github.com/UJX6N/bbrplus-5.15/releases/download/5.15.86-bbrplus/Debian-Ubuntu_Required_linux-image-5.15.86-bbrplus_5.15.86-bbrplus-1_amd64.deb \
+		wget -N --no-check-certificate https://github.com/UJX6N/bbrplus-5.15/releases/download/5.15.91-bbrplus/Debian-Ubuntu_Required_linux-image-5.15.91-bbrplus_5.15.91-bbrplus-1_amd64.deb \
         -O bbrplus_5.15.86_amd64.deb  >/dev/null 2>&1
-		wget -N --no-check-certificate https://github.com/UJX6N/bbrplus-5.15/releases/download/5.15.86-bbrplus/Debian-Ubuntu_Optional_linux-headers-5.15.86-bbrplus_5.15.86-bbrplus-1_amd64.deb \
+		wget -N --no-check-certificate https://github.com/UJX6N/bbrplus-5.15/releases/download/5.15.91-bbrplus/Debian-Ubuntu_Optional_linux-headers-5.15.91-bbrplus_5.15.91-bbrplus-1_amd64.deb \
         -O bbrplus_5.15.86-headers_amd64.deb >/dev/null 2>&1
 		dpkg -i bbrplus_5.15.86_amd64.deb
 		dpkg -i bbrplus_5.15.86-headers_amd64.deb
