@@ -14,14 +14,14 @@
 Akses kembali 15 setelah proses instalasi.
 
 ### TESTED ON OS 
-- UBUNTU 20.04
+- UBUNTU 20.04.05
 
 ### FITUR TAMBAHAN
 - Tambah Swap 1GiB
 - Pemasangan yang dinamis
 - Tuning profile pada server
 - Xray Core by @dharak36
-- Penambahan file2ban
+- Penambahan fail2ban
 - Auto block sebagian ads indo by default
 
 ### PORT INFO
@@ -59,3 +59,4 @@ Repository ini dilindungi oleh lisensi [MIT](https://mit-license.org/)
 
 ### Credits
 - [Dharak36](https://github.com/dharak36/Xray-core)
+- [Tiarap](https://github.com/pengelana/blocklist)
