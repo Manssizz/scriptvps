@@ -38,7 +38,7 @@ Akses kembali 15 setelah proses instalasi.
 - VMESS NONTLS 80
 - SSH WS / TLS 443
 - SSH NON TLS 8880
-- OVPN SSL/TCP 443/1194
+- OVPN SSL/TCP 1194
 - SLOWDNS 5300
 ```
 
