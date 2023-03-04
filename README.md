@@ -11,7 +11,7 @@
 ### INSTALL SCRIPT
 <pre><code>apt install -y wget screen && wget -q https://raw.githubusercontent.com/manssizz/scriptvps/master/main.sh && chmod +x main.sh && screen -S install ./main.sh</code></pre>
 
-Akses kembali 15 setelah proses instalasi.
+Akses kembali 15 setelah proses instalasi. **Akses kembali via ssh menggunakan port 39**
 
 ### TESTED ON OS 
 - UBUNTU 20.04.05

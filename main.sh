@@ -461,7 +461,7 @@ function finish(){
     clear
     echo "    ┌─────────────────────────────────────────────────────┐"
     echo "    │       >>> Service & Port                            │"
-    echo "    │   - Open SSH                : 443, 80, 22           │"
+    echo "    │   - Open SSH                : 443, 80, 39           │"
     echo "    │   - DNS (SLOWDNS)           : 443, 80, 53           │"
     echo "    │   - Dropbear                : 443, 109, 80          │"
     echo "    │   - Dropbear Websocket      : 443, 109              │"
