@@ -94,7 +94,7 @@ function base_package() {
     sudo apt update && apt upgrade -y
     # linux-tools-common util-linux gnupg gnupg2 gnupg1  \
     sudo apt install squid nginx zip pwgen openssl netcat bash-completion  \
-    curl socat xz-utils wget apt-transport-https dnsutils socat \
+    curl socat xz-utils wget apt-transport-https dnsutils socat chrony \
     tar wget curl ruby zip unzip p7zip-full python3-pip haproxy libc6  \
     msmtp-mta ca-certificates bsd-mailx iptables iptables-persistent netfilter-persistent \
     net-tools  jq openvpn easy-rsa python3-certbot-nginx p7zip-full tuned fail2ban -y
@@ -345,6 +345,11 @@ function tambahan(){
     swapon /swapfile >/dev/null 2>&1
     sed -i '$ i\/swapfile      swap swap   defaults    0 0' /etc/fstab
 
+    # > Singkronisasi jam
+    chronyd -q 'server 0.id.pool.ntp.org iburst'
+    chronyc sourcestats -v
+    chronyc tracking -v
+
     # > Tuned Device
     tuned-adm profile network-latency
     cat >/etc/msmtprc <<EOF
@@ -407,6 +412,7 @@ function enable_services(){
     systemctl daemon-reload
     systemctl start netfilter-persistent
     systemctl enable --now nginx
+    systemctl enable --now chronyd
     systemctl enable --now xray
     systemctl enable --now rc-local
     systemctl enable --now dropbear
