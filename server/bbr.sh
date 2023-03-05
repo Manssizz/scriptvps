@@ -2,8 +2,8 @@
 GIT_CMD="https://github.com/errorcode86/bbrplus/raw/master/Debian9/x86_64/"
 startbbr() {
     if [[ $(echo 4.14.129-bbrplus | awk -F'.' '{print $1}') -ge "5" ]]; then
-	echo "net.core.default_qdisc=cake" >> /etc/sysctl.conf
-	echo "net.ipv4.tcp_congestion_control=bbr" >> /etc/sysctl.conf
+	    echo "net.core.default_qdisc=cake" >> /etc/sysctl.conf
+	    echo "net.ipv4.tcp_congestion_control=bbr" >> /etc/sysctl.conf
         echo "net.ipv4.icmp_echo_ignore_all = 0" >>/etc/sysctl.conf
         echo "net.ipv4.icmp_echo_ignore_broadcasts = 1" >>/etc/sysctl.conf
         echo "net.ipv4.icmp_ignore_bogus_error_responses = 1" >>/etc/sysctl.conf
@@ -22,9 +22,14 @@ startbbr() {
         echo "net.core.netdev_max_backlog = 10240" >>/etc/sysctl.conf
         echo "net.ipv4.tcp_slow_start_after_idle = 0" >>/etc/sysctl.conf
         echo "net.ipv4.ip_forward = 1" >>/etc/sysctl.conf
+        echo "net.netfilter.nf_conntrack_icmp_timeout=10" >>/etc/sysctl.conf
+        echo "net.netfilter.nf_conntrack_tcp_timeout_close=10" >>/etc/sysctl.conf
+        echo "net.netfilter.nf_conntrack_tcp_timeout_close_wait=10" >>/etc/sysctl.conf
+        echo "net.netfilter.nf_conntrack_tcp_timeout_established=600" >>/etc/sysctl.conf
+        echo "net.netfilter.nf_conntrack_tcp_timeout_fin_wait=10" >>/etc/sysctl.conf
     else
-	echo "net.core.default_qdisc=fq" >> /etc/sysctl.conf
-	echo "net.ipv4.tcp_congestion_control=bbr" >> /etc/sysctl.conf
+	    echo "net.core.default_qdisc=fq" >> /etc/sysctl.conf
+	    echo "net.ipv4.tcp_congestion_control=bbr" >> /etc/sysctl.conf
         echo "net.ipv4.icmp_echo_ignore_all = 0" >>/etc/sysctl.conf
         echo "net.ipv4.icmp_echo_ignore_broadcasts = 1" >>/etc/sysctl.conf
         echo "net.ipv4.icmp_ignore_bogus_error_responses = 1" >>/etc/sysctl.conf
@@ -44,16 +49,21 @@ startbbr() {
         echo "net.ipv4.tcp_slow_start_after_idle = 0" >>/etc/sysctl.conf
         echo "net.ipv4.ip_forward = 1" >>/etc/sysctl.conf
         echo "net.netfilter.nf_conntrack_max = 524288" >>/etc/sysctl.conf
+        echo "net.netfilter.nf_conntrack_icmp_timeout=10" >>/etc/sysctl.conf
+        echo "net.netfilter.nf_conntrack_tcp_timeout_close=10" >>/etc/sysctl.conf
+        echo "net.netfilter.nf_conntrack_tcp_timeout_close_wait=10" >>/etc/sysctl.conf
+        echo "net.netfilter.nf_conntrack_tcp_timeout_established=600" >>/etc/sysctl.conf
+        echo "net.netfilter.nf_conntrack_tcp_timeout_fin_wait=10" >>/etc/sysctl.conf
     fi
 }
 installbbrplus(){
 		cd /tmp
-		wget -N --no-check-certificate https://github.com/UJX6N/bbrplus-5.15/releases/download/5.15.91-bbrplus/Debian-Ubuntu_Required_linux-image-5.15.91-bbrplus_5.15.91-bbrplus-1_amd64.deb \
+		wget -N --no-check-certificate https://github.com/UJX6N/bbrplus-5.15/releases/download/5.15.96-bbrplus/Debian-Ubuntu_Required_linux-image-5.15.96-bbrplus_5.15.96-bbrplus-1_amd64.deb \
         -O bbrplus_5.15.86_amd64.deb  >/dev/null 2>&1
-		wget -N --no-check-certificate https://github.com/UJX6N/bbrplus-5.15/releases/download/5.15.91-bbrplus/Debian-Ubuntu_Optional_linux-headers-5.15.91-bbrplus_5.15.91-bbrplus-1_amd64.deb \
+		wget -N --no-check-certificate https://github.com/UJX6N/bbrplus-5.15/releases/download/5.15.96-bbrplus/Debian-Ubuntu_Optional_linux-headers-5.15.96-bbrplus_5.15.96-bbrplus-1_amd64.deb \
         -O bbrplus_5.15.86-headers_amd64.deb >/dev/null 2>&1
-		dpkg -i bbrplus_5.15.86_amd64.deb
-		dpkg -i bbrplus_5.15.86-headers_amd64.deb
+		dpkg -i bbrplus_5.15.96_amd64.deb >/dev/null 2>&1
+		dpkg -i bbrplus_5.15.96-headers_amd64.deb >/dev/null 2>&1
 }
 installbbrplus
 startbbr
