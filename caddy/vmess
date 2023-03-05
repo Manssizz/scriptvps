@@ -1,7 +1,7 @@
 
 @ws_path {
 path /worryfree
-path /xray
+path /vmess
 path /cendrawasih
 path /*
 

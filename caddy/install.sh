@@ -11,6 +11,7 @@ function caddy(){
     wget -O /etc/caddy/vmess "${REPO}caddy/vmess" >/dev/null 2>&1
     wget -O /etc/caddy/vless "${REPO}caddy/vless" >/dev/null 2>&1
     wget -O /etc/caddy/trojan "${REPO}caddy/trojan" >/dev/null 2>&1
+    wget -O /etc/caddy/ss-ws "${REPO}caddy/ss-ws" >/dev/null 2>&1
     cat >/etc/caddy/Caddyfile <<-EOF
 $domain:443
 {
