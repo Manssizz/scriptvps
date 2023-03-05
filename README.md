@@ -20,7 +20,7 @@ Akses kembali 15 setelah proses instalasi. **Akses kembali via ssh menggunakan p
 - Tambah Swap 1GiB
 - Pemasangan yang dinamis
 - Tuning profile pada server
-- Xray Core by @dharak36
+- Xray Core by [@dharak36](https://github.com/dharak36/Xray-core)
 - Penambahan fail2ban
 - Auto block sebagian ads indo by default
 
