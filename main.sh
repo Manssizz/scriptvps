@@ -85,7 +85,7 @@ function first_setup(){
 
 ### Update and remove packages
 function base_package() {
-    sudo apt-purge git man-db apache2 ufw exim4 firewalld snapd* -y;
+    sudo apt autoremove git man-db apache2 ufw exim4 firewalld snapd* -y;
     clear
     print_install "Memasang paket yang dibutuhkan"
     sysctl -w net.ipv6.conf.all.disable_ipv6=1 >/dev/null 2>&1
@@ -352,7 +352,7 @@ function tambahan(){
     sed -i '$ i\/swapfile      swap swap   defaults    0 0' /etc/fstab
 
     # > Singkronisasi jam
-    chronyd -q 'server 0.id.pool.ntp.org iburst'
+    # chronyd -q 'server 0.id.pool.ntp.org iburst'
     chronyc sourcestats -v
     chronyc tracking -v
 
