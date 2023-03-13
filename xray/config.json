@@ -22,7 +22,7 @@
           "decryption":"none",
             "clients": [
                {
-                 "id": "36326ea2-6994-4d53-bcd5-f43bbdaec562"
+                 "id": "cendrawasih"
 #vless
              }
           ]
@@ -41,7 +41,7 @@
       "settings": {
             "clients": [
                {
-                 "id": "36326ea2-6994-4d53-bcd5-f43bbdaec562",
+                 "id": "cendrawasih",
                  "alterId": 0
 #vmess
              }
@@ -62,7 +62,7 @@
           "decryption":"none",
            "clients": [
               {
-                 "password": "36326ea2-6994-4d53-bcd5-f43bbdaec562"
+                 "password": "cendrawasih"
 #trojanws
               }
           ],
@@ -83,7 +83,7 @@
            "clients": [
            {
            "method": "aes-128-gcm",
-          "password": "36326ea2-6994-4d53-bcd5-f43bbdaec562"
+          "password": "cendrawasih"
 #ssws
            }
           ],
@@ -104,7 +104,7 @@
          "decryption":"none",
            "clients": [
              {
-               "id": "36326ea2-6994-4d53-bcd5-f43bbdaec562"
+               "id": "cendrawasih"
 #vlessgrpc
              }
           ]
@@ -123,7 +123,7 @@
       "settings": {
             "clients": [
                {
-                 "id": "36326ea2-6994-4d53-bcd5-f43bbdaec562",
+                 "id": "cendrawasih",
                  "alterId": 0
 #vmessgrpc
              }
@@ -144,7 +144,7 @@
           "decryption":"none",
              "clients": [
                {
-                 "password": "36326ea2-6994-4d53-bcd5-f43bbdaec562"
+                 "password": "cendrawasih"
 #trojangrpc
                }
            ]
@@ -164,7 +164,7 @@
         "clients": [
           {
              "method": "aes-128-gcm",
-             "password": "36326ea2-6994-4d53-bcd5-f43bbdaec562"
+             "password": "cendrawasih"
 #ssgrpc
            }
          ],
