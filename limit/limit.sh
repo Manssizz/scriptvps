@@ -15,7 +15,7 @@ systemctl daemon-reload
 systemctl enable --now limitvmess
 systemctl enable --now limitvless
 systemctl enable --now limittrojan
-# systemctl enable limitshadowsocks
+systemctl enable --now limitshadowsocks
 # systemctl start limitvmess
 # systemctl start limitvless
 # systemctl start limittrojan
