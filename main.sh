@@ -23,6 +23,7 @@ IMP="wget -q -O"
 CHATID="1036440597"
 LOCAL_DATE="/usr/bin/"
 MYIP=$(wget -qO- ipinfo.io/ip)
+ISP=$(wget -qO- ipinfo.io/org)
 CITY=$(curl -s ipinfo.io/city)
 TIME=$(date +'%Y-%m-%d %H:%M:%S')
 RAMMS=$(free -m | awk 'NR==2 {print $2}')
@@ -84,7 +85,7 @@ function first_setup(){
 
 ### Update and remove packages
 function base_package() {
-    sudo apt-get autoremove -y man-db apache2 ufw exim4 firewalld snapd* -y
+    sudo apt-purge git man-db apache2 ufw exim4 firewalld snapd* -y;
     clear
     print_install "Memasang paket yang dibutuhkan"
     sysctl -w net.ipv6.conf.all.disable_ipv6=1 >/dev/null 2>&1
@@ -92,10 +93,10 @@ function base_package() {
     sudo apt install software-properties-common -y
     sudo add-apt-repository ppa:vbernat/haproxy-2.7 -y
     sudo apt update && apt upgrade -y
-    # linux-tools-common util-linux gnupg gnupg2 gnupg1  \
+    # linux-tools-common util-linux  \
     sudo apt install squid nginx zip pwgen openssl netcat bash-completion  \
     curl socat xz-utils wget apt-transport-https dnsutils socat chrony \
-    tar wget curl ruby zip unzip p7zip-full python3-pip haproxy libc6  \
+    tar wget curl ruby zip unzip p7zip-full python3-pip haproxy libc6  gnupg gnupg2 gnupg1 \
     msmtp-mta ca-certificates bsd-mailx iptables iptables-persistent netfilter-persistent \
     net-tools  jq openvpn easy-rsa python3-certbot-nginx p7zip-full tuned fail2ban -y
     apt-get clean all; sudo apt-get autoremove -y
@@ -237,6 +238,7 @@ function download_config(){
     wget -O /etc/nginx/conf.d/cendrawasih.conf "${REPO}config/cendrawasih.conf" >/dev/null 2>&1
     sed -i "s/xxx/${domain}/g" /etc/nginx/conf.d/cendrawasih.conf
     wget -O /etc/nginx/nginx.conf "${REPO}config/nginx.conf" >/dev/null 2>&1
+    # curl "${REPO}caddy/install.sh" | bash 
     wget -q -O /etc/squid/squid.conf "${REPO}config/squid.conf" >/dev/null 2>&1
     echo "visible_hostname $(cat /etc/xray/domain)" /etc/squid/squid.conf
     mkdir -p /var/log/squid/cache/
@@ -332,6 +334,10 @@ function tambahan(){
     gotop_link="https://github.com/xxxserxxx/gotop/releases/download/v$gotop_latest/gotop_v"$gotop_latest"_linux_amd64.deb"
     curl -sL "$gotop_link" -o /tmp/gotop.deb
     dpkg -i /tmp/gotop.deb >/dev/null 2>&1
+
+    # > Pasang Limit
+    wget -qO /tmp/limit.sh "${REPO}limit/limit.sh" >/dev/null 2>&1
+    chmod +x /tmp/limit.sh && bash /tmp/limit.sh >/dev/null 2>&1
 
     # > Pasang BBR Plus
     wget -qO /tmp/bbr.sh "${REPO}server/bbr.sh" >/dev/null 2>&1
@@ -445,14 +451,14 @@ function install_all() {
 function finish(){
     TEXT="
 <u>INFORMATION VPS INSTALL SC</u>
-<code>TIME    : </code><code>${TIME}</code>
-<code>IPVPS   : </code><code>${MYIP}</code>
-<code>DOMAIN  : </code><code>${domain}</code>
-<code>IP VPS  : </code><code>${MYIP}</code>
-<code>LOKASI  : </code><code>${CITY}</code>
-<code>USER    : </code><code>${NAMES}</code>
-<code>RAM     : </code><code>${RAMMS}MB</code>
-<code>LINUX   : </code><code>${OS}</code>
+<code>TIME      : </code><code>${TIME}</code>
+<code>IPVPS     : </code><code>${MYIP}</code>
+<code>DOMAIN    : </code><code>${domain}</code>
+<code>ISP       : </code><code>${ISP}</code>
+<code>LOKASI    : </code><code>${CITY}</code>
+<code>USER      : </code><code>${NAMES}</code>
+<code>RAM       : </code><code>${RAMMS}MB</code>
+<code>LINUX     : </code><code>${OS}</code>
 "
     curl -s --max-time $TIMES -d "chat_id=$CHATID&disable_web_page_preview=1&text=$TEXT&parse_mode=html" $URL >/dev/null
     cp /etc/openvpn/*.ovpn /var/www/html/
