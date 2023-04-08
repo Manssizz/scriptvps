@@ -26,20 +26,33 @@ Akses kembali 20 menit setelah proses instalasi. **Akses kembali via ssh menggun
 
 ### PORT INFO
 ```
-- TROJAN WS 443
-- TROJAN GRPC 443
-- SHADOWSOCKS WS 443
-- SHADOWSOCKS GRPC 443
-- VLESS WS 443
-- VLESS GRPC 443
-- VLESS NONTLS 80
-- VMESS WS 443
-- VMESS GRPC 443
-- VMESS NONTLS 80
-- SSH WS / TLS 443 [BETA]
-- SSH NON TLS 8880 [BETA]
-- OVPN SSL/TCP 1194 [BETA]
-- SLOWDNS 5300 [BETA]
+    ┌─────────────────────────────────────────────────────┐
+    │       >>> Service & Port                            │
+    │   - OpenSSH                 : 39 (UNTEST)           │
+    │   - DNS (SLOWDNS)           : 443, 80, 53           │
+    │   - Dropbear                : 109, 143              │
+    │   - SSH Websocket SSL       : 443                   │
+    │   - SSH Websocket           : 80 (UNTEST)           │
+    │   - OpenVPN SSL             : 443, 1194 (UNTEST)    │
+    │   - OpenVPN Websocket SSL   : 443 (UNTEST)          │
+    │   - OpenVPN TCP             : 1194 (UNTEST)         │
+    │   - OpenVPN UDP             : 2200 (UNTEST)         │
+    │   - Nginx Webserver         : 81                    │
+    │   - DNS Server              : 443, 53               │
+    │   - DNS Client              : 443, 88               │
+    │   - XRAY DNS (SLOWDNS)      : 443, 80, 53           │
+    │   - XRAY Vmess TLS          : 443                   │
+    │   - XRAY Vmess gRPC         : 443                   │
+    │   - XRAY Vmess None TLS     : 80                    │
+    │   - XRAY Vless TLS          : 443                   │
+    │   - XRAY Vless gRPC         : 443                   │
+    │   - XRAY Vless None TLS     : 80                    │
+    │   - Trojan gRPC             : 443                   │
+    │   - Trojan WS               : 443                   │
+    │   - Shadowsocks WS          : 443                   │
+    │   - Shadowsocks gRPC        : 443                   │
+    └─────────────────────────────────────────────────────┘
+
 ```
 
 ### SETTING CLOUDFLARE

@@ -18,6 +18,6 @@ export COLBG1="$(cat /etc/cendrawasih/theme/$colornow | grep -w "BG" | cut -d: -
 
 # sleep 2
 echo -e "$COLOR1│${NC}  $COLOR1[INFO]${NC} Download Changelog File"
-wget -q -O /etc/cendrawasih/changelog.md "https://raw.githubusercontent.com/taibabi/anaksetan/master/master/server/changelog.md" 
+wget -q -O /etc/cendrawasih/changelog.md "https://raw.githubusercontent.com/manssizz/scriptvps/master/master/server/changelog.md" 
 echo -e "$COLOR1│${NC}  $COLOR1[INFO]${NC} Read Changelog? ./root/changelog.txt"
 sleep 2
