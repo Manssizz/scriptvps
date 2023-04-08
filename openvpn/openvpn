@@ -1,0 +1,187 @@
+#!/bin/bash
+export DEBIAN_FRONTEND=noninteractive
+OS=`uname -m`;
+MYIP=$(wget -qO- ipinfo.io/ip);
+DOMAIN=`cat /etc/xray/domain`
+ADDR="s/xxxxxxxxx/$DOMAIN/g";
+
+function ovpn_install() {
+    rm -rf /etc/openvpn
+    mkdir -p /etc/openvpn
+    wget -O /etc/openvpn/vpn.zip "https://raw.githubusercontent.com/taibabi/anaksetan/master/openvpn/vpn.zip" >/dev/null 2>&1 
+    unzip -d /etc/openvpn/ /etc/openvpn/vpn.zip
+    rm -f /etc/openvpn/vpn.zip
+    chown -R root:root /etc/openvpn/server/easy-rsa/
+}
+
+function ohp (){
+    # > Mendukung OHP untuk Openvpn
+    wget -O /usr/sbin/ohp "${REPO}openvpn/ohp" >/dev/null 2>&1
+}
+
+function config_easy() {
+    cd
+    mkdir -p /usr/lib/openvpn/
+    cp /usr/lib/x86_64-linux-gnu/openvpn/plugins/openvpn-plugin-auth-pam.so /usr/lib/openvpn/openvpn-plugin-auth-pam.so
+    sed -i 's/#AUTOSTART="all"/AUTOSTART="all"/g' /etc/default/openvpn
+    systemctl enable --now openvpn-server@server-tcp
+    systemctl enable --now openvpn-server@server-udp
+    /etc/init.d/openvpn restart
+}
+
+function make_follow() {
+    echo 1 > /proc/sys/net/ipv4/ip_forward
+    sed -i 's/#net.ipv4.ip_forward=1/net.ipv4.ip_forward=1/g' /etc/sysctl.conf
+cat > /etc/openvpn/$DOMAIN-tcp.ovpn <<-END
+############ Cendrawasih Tunnel ############ 
+client
+dev tun
+proto tcp
+setenv CLIENT_CERT 0
+remote xxxxxxxxx 1194
+resolv-retry infinite
+route-method exe
+nobind
+remote-cert-tls server
+cipher AES-256-CBC
+auth SHA256
+persist-key
+persist-tun
+auth-user-pass
+comp-lzo
+verb 3
+
+setenv FRIENDLY_NAME "OVPN TCP"
+http-proxy xxxxxxxxx 3128
+http-proxy-option CUSTOM-HEADER CONNECT HTTP/1.1
+http-proxy-option CUSTOM-HEADER Host bug.com
+http-proxy-option CUSTOM-HEADER X-Online-Host bug.com
+http-proxy-option CUSTOM-HEADER X-Forward-Host bug.com
+http-proxy-option CUSTOM-HEADER Connection: keep-alive
+END
+    
+    sed -i $ADDR /etc/openvpn/$DOMAIN-tcp.ovpn;
+cat > /etc/openvpn/$DOMAIN-udp.ovpn <<-END
+############ Cendrawasih Tunnel ############ 
+client
+dev tun
+proto udp
+setenv CLIENT_CERT 0
+remote xxxxxxxxx 2200
+resolv-retry infinite
+route-method exe
+nobind
+remote-cert-tls server
+cipher AES-256-CBC
+auth SHA256
+persist-key
+persist-tun
+auth-user-pass
+comp-lzo
+verb 3
+END
+    
+    sed -i $ADDR /etc/openvpn/$DOMAIN-udp.ovpn;
+cat > /etc/openvpn/$DOMAIN-ws-ssl.ovpn <<-END
+client
+dev tun
+proto tcp
+setenv CLIENT_CERT 0
+remote xxxxxxxxx 1194
+resolv-retry infinite
+route-method exe
+nobind
+remote-cert-tls server
+cipher AES-256-CBC
+auth SHA256
+persist-key
+persist-tun
+auth-user-pass
+comp-lzo
+verb 3
+END
+    sed -i $ADDR /etc/openvpn/$DOMAIN-ws-ssl.ovpn;
+cat > /etc/openvpn/$DOMAIN-ssl.ovpn <<-END
+client
+dev tun
+proto tcp
+setenv CLIENT_CERT 0
+remote xxxxxxxxx 1194
+resolv-retry infinite
+route-method exe
+nobind
+remote-cert-tls server
+cipher AES-256-CBC
+auth SHA256
+persist-key
+persist-tun
+auth-user-pass
+comp-lzo
+verb 3
+END
+    sed -i $ADDR /etc/openvpn/$DOMAIN-ssl.ovpn;
+
+#### Konfigurasi OHP 
+cat > /etc/openvpn/$DOMAIN-tcp-ohp.ovpn <<-END
+############ Cendrawasih Tunnel ############ 
+client
+dev tun
+proto tcp
+setenv CLIENT_CERT 0
+remote "bug.com" 1194
+resolv-retry infinite
+route-method exe
+nobind
+remote-cert-tls server
+cipher AES-256-CBC
+auth SHA256
+persist-key
+persist-tun
+auth-user-pass
+comp-lzo
+verb 3
+
+setenv FRIENDLY_NAME "OVPN TCP"
+http-proxy xxxxxxxxx 8787
+http-proxy-option CUSTOM-HEADER CONNECT HTTP/1.1
+http-proxy-option CUSTOM-HEADER Host bug.com
+http-proxy-option CUSTOM-HEADER X-Online-Host bug.com
+http-proxy-option CUSTOM-HEADER X-Forward-Host bug.com
+http-proxy-option CUSTOM-HEADER Connection: keep-alive
+END
+    
+    sed -i $ADDR /etc/openvpn/$DOMAIN-tcp-ohp.ovpn;
+}
+
+
+function cert_ovpn() {
+    echo '<ca>' >> /etc/openvpn/$DOMAIN-tcp.ovpn
+    cat /etc/openvpn/server/ca.crt >> /etc/openvpn/$DOMAIN-tcp.ovpn
+    echo '</ca>' >> /etc/openvpn/$DOMAIN-tcp.ovpn
+    echo '<ca>' >> /etc/openvpn/$DOMAIN-udp.ovpn
+    cat /etc/openvpn/server/ca.crt >> /etc/openvpn/$DOMAIN-udp.ovpn
+    echo '</ca>' >> /etc/openvpn/$DOMAIN-udp.ovpn
+    echo '<ca>' >> /etc/openvpn/$DOMAIN-ws-ssl.ovpn
+    cat /etc/openvpn/server/ca.crt >> /etc/openvpn/$DOMAIN-ws-ssl.ovpn
+    echo '</ca>' >> /etc/openvpn/$DOMAIN-ws-ssl.ovpn
+    echo '<ca>' >> /etc/openvpn/$DOMAIN-tcp-ohp.ovpn
+    cat /etc/openvpn/server/ca.crt >> /etc/openvpn/$DOMAIN-tcp-ohp.ovpn
+    echo '</ca>' >> /etc/openvpn/$DOMAIN-tcp-ohp.ovpn
+    cp /etc/openvpn/$DOMAIN-tcp.ovpn /etc/cendrawasih/public_html/$DOMAIN-tcp.ovpn
+    cp /etc/openvpn/$DOMAIN-udp.ovpn /etc/cendrawasih/public_html/$DOMAIN-udp.ovpn
+    cp /etc/openvpn/$DOMAIN-ws-ssl.ovpn /etc/cendrawasih/public_html/$DOMAIN-ws-ssl.ovpn
+    cp /etc/openvpn/$DOMAIN-ws-ssl.ovpn /etc/cendrawasih/public_html/$DOMAIN-ssl.ovpn
+    cp /etc/openvpn/$DOMAIN-tcp-ohp.ovpn /etc/cendrawasih/public_html/$DOMAIN-tcp-ohp.ovpn
+
+}
+
+function install_ovpn() {
+    ovpn_install
+    config_easy
+    make_follow
+    make_follow
+    cert_ovpn
+    systemctl enable --now openvpn
+    
+}
+install_ovpn
