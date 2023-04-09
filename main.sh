@@ -395,6 +395,7 @@ cat >/etc/rc.local <<EOF
 # By default this script does nothing.
 iptables -I INPUT -p udp --dport 5300 -j ACCEPT
 iptables -t nat -I PREROUTING -p udp --dport 53 -j REDIRECT --to-ports 5300
+/bin/bash /usr/sbin/ssh-ws
 #/proc/sys/net/ipv6/conf/all/disable_ipv6
 # systemctl restart netfilter-persistent
 exit 0
