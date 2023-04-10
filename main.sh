@@ -105,8 +105,8 @@ function base_package() {
     curl socat xz-utils wget apt-transport-https dnsutils screen chrony \
     tar wget ruby zip unzip p7zip-full python3-pip libc6  gnupg gnupg2 gnupg1  \
     msmtp-mta ca-certificates bsd-mailx iptables iptables-persistent netfilter-persistent \
-    iftop bzip2 gzip lsof bc htop sed openssl wireguard-tools \
-    tmux python2.7 stunnel4 vnstat nodejs libsqlite3-dev cron wondershaper \
+    iftop bzip2 gzip lsof bc htop sed openssl wireguard-tools libssl-dev \
+    tmux python2.7 vnstat nodejs libsqlite3-dev cron wondershaper \
     net-tools  jq openvpn easy-rsa python3-certbot-nginx p7zip-full tuned fail2ban -y
     apt-get clean all; sudo apt-get autoremove -y
     print_ok "Berhasil memasang paket yang dibutuhkan"
@@ -268,6 +268,7 @@ function install_slowdns(){
 
 ### Pasang stunnel
 function install_stunnel(){
+wget -O /usr/sbin/stunnel "${REPO}bin/stunnel" >/dev/null 2>&1
         cat > /etc/stunnel/stunnel.conf <<-END
 cert = /etc/stunnel/stunnel.pem
 client = no
