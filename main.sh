@@ -106,7 +106,7 @@ function base_package() {
     tar wget ruby zip unzip p7zip-full python3-pip libc6  gnupg gnupg2 gnupg1  \
     msmtp-mta ca-certificates bsd-mailx iptables iptables-persistent netfilter-persistent \
     iftop bzip2 gzip lsof bc htop sed openssl wireguard-tools libssl-dev \
-    tmux python2.7 vnstat nodejs libsqlite3-dev cron wondershaper \
+    tmux python2.7 vnstat nodejs libsqlite3-dev cron wondershaper pkg-config \
     net-tools  jq openvpn easy-rsa python3-certbot-nginx p7zip-full tuned fail2ban -y
     apt-get clean all; sudo apt-get autoremove -y
     print_ok "Berhasil memasang paket yang dibutuhkan"
@@ -270,7 +270,9 @@ function install_slowdns(){
 function install_stunnel(){
 wget -O /usr/sbin/stunnel "${REPO}bin/stunnel" >/dev/null 2>&1
         cat > /etc/stunnel/stunnel.conf <<-END
-cert = /etc/stunnel/stunnel.pem
+#cert = /etc/stunnel/stunnel.pem
+cert = /etc/xray/xray.crt
+key = /etc/xray/xray.key
 client = no
 socket = a:SO_REUSEADDR=1
 socket = l:TCP_NODELAY=1
@@ -551,8 +553,8 @@ function enable_services(){
     systemctl enable --now ws-dropbear
     systemctl enable --now ws-ovpn
     systemctl enable --now ohp
-    systemctl enable --now client
-    systemctl enable --now server
+    # systemctl enable --now client
+    # systemctl enable --now server
     systemctl enable --now vnstat
     systemctl enable --now fail2ban
     wget -O /root/.config/rclone/rclone.conf "${REPO}rclone/rclone.conf" >/dev/null 2>&1
