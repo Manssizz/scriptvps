@@ -268,15 +268,8 @@ function install_slowdns(){
 
 ### Pasang stunnel
 function install_stunnel(){
-wget -O /usr/sbin/stunnel "${REPO}bin/stunnel" >/dev/null 2>&1
-wget -O /etc/init.d/stunnel "${REPO}websocket/stunnel.init" >/dev/null 2>&1
-chmod 644 /etc/init.d/stunnel
-mkdir -p /etc/stunnel
-
-cat > /etc/stunnel/stunnel.conf <<-END
-#cert = /etc/stunnel/stunnel.pem
-cert = /etc/xray/xray.crt
-key = /etc/xray/xray.key
+        cat > /etc/stunnel/stunnel.conf <<-END
+cert = /etc/stunnel/stunnel.pem
 client = no
 socket = a:SO_REUSEADDR=1
 socket = l:TCP_NODELAY=1
@@ -301,50 +294,14 @@ connect = 127.0.0.1:1194
 END
 chmod 644 /etc/stunnel/stunnel.conf
 
-cat > /etc/systemd/system/stunnel.service << END
-[Unit]
-Description=Universal TLS/SSL tunneling service
-Documentation=https://www.stunnel.org/docs.html
-After=syslog.target network-online.target
+        openssl genrsa -out key.pem 2048
+        openssl req -new -x509 -key key.pem -out cert.pem -days 1095 \
+        -subj "/C=ID/ST=Jakarta/L=Jakarta/O=Cendrawasih/OU=CendrawasihTunnel/CN=Cendrawasih/emailAddress=taibabi@cendrawasih.com"
+        cat key.pem cert.pem >> /etc/stunnel/stunnel.pem
+        chmod 600 /etc/stunnel/stunnel.pem
 
-[Service]
-ExecStart=/usr/sbin/stunnel /etc/stunnel/stunnel.conf
-Type=forking
-
-[Install]
-WantedBy=multi-user.target
-END
-chmod 644 /etc/systemd/system/stunnel.service
-
-cat >/etc/default/stunnel << END
-# /etc/default/stunnel
-# Julien LEMOINE <speedblue@debian.org>
-# September 2003
-
-ENABLED=1
-FILES="/etc/stunnel/*.conf"
-OPTIONS=""
-
-# Change to one to enable ppp restart scripts
-PPP_RESTART=0
-
-# Change to enable the setting of limits on the stunnel instances
-# For example, to set a large limit on file descriptors (to enable
-# more simultaneous client connections), set RLIMITS="-n 4096"
-# More than one resource limit may be modified at the same time,
-# e.g. RLIMITS="-n 4096 -d unlimited"
-RLIMITS="-n 4096"
-END 
-chmod 644 /etc/default/stunnel
-
-        # openssl genrsa -out key.pem 2048
-        # openssl req -new -x509 -key key.pem -out cert.pem -days 1095 \
-        # -subj "/C=ID/ST=Jakarta/L=Jakarta/O=Cendrawasih/OU=CendrawasihTunnel/CN=Cendrawasih/emailAddress=taibabi@cendrawasih.com"
-        # cat key.pem cert.pem >> /etc/stunnel/stunnel.pem
-        # chmod 600 /etc/stunnel/stunnel.pem
-
-        # sed -i 's/ENABLED=0/ENABLED=1/g' /etc/default/stunnel4
-        # /etc/init.d/stunnel4 enable
+        sed -i 's/ENABLED=0/ENABLED=1/g' /etc/default/stunnel4
+        /etc/init.d/stunnel4 restart
 
 }
 
