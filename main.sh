@@ -354,6 +354,12 @@ function download_config(){
     sed -i 's/Interface "'""eth0""'"/Interface "'""$NET""'"/g' /etc/vnstat.conf
     chown vnstat:vnstat /var/lib/vnstat -R
 
+cat >/etc/cron.d/clean <<EOF
+SHELL=/bin/sh
+PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
+*/10 * * * * echo 1 > /proc/sys/vm/drop_caches
+EOF
+
 cat >/etc/cron.d/xp_all <<EOF
 SHELL=/bin/sh
 PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
