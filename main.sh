@@ -76,7 +76,7 @@ function first_setup(){
     timedatectl set-timezone Asia/Jakarta
     wget -O /etc/banner ${REPO}config/banner >/dev/null 2>&1
     chmod +x /etc/banner
-    wget -O /etc/ssh/sshd_config ${REPO}config/sshd_config >/dev/null 2>&1
+    # wget -O /etc/ssh/sshd_config ${REPO}config/sshd_config >/dev/null 2>&1
     wget -q -O /etc/ipserver "${REPO}server/ipserver" && bash /etc/ipserver >/dev/null 2>&1
     chmod 644 /etc/ssh/sshd_config
     useradd -M cendrawasih
@@ -89,7 +89,7 @@ function first_setup(){
 
 ### Update and remove packages
 function base_package() {
-    sudo apt autoremove git man-db apache2 ufw exim4 firewalld snapd* apparmor -y;
+    sudo apt --purge remove git man-db apache2 ufw exim4 firewalld snapd* apparmor bind9 -y;
     clear
     print_install "Memasang paket yang dibutuhkan"
     sysctl -w net.ipv6.conf.all.disable_ipv6=1 >/dev/null 2>&1
