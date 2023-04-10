@@ -607,6 +607,7 @@ function install_all() {
     # add_domain
     pasang_ssl 
     install_xray >> /root/install.log
+    install_stunnel >> /root/install.log
     install_websocket >> /root/install.log
     install_ovpn >> /root/install.log
     install_slowdns >> /root/install.log
