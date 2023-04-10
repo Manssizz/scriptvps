@@ -48,6 +48,8 @@ auth SHA256
 persist-key
 persist-tun
 auth-user-pass
+dhcp-option DNS 174.138.21.128
+dhcp-option DNS 188.166.206.224
 comp-lzo
 verb 3
 
@@ -77,6 +79,8 @@ auth SHA256
 persist-key
 persist-tun
 auth-user-pass
+dhcp-option DNS 174.138.21.128
+dhcp-option DNS 188.166.206.224
 comp-lzo
 verb 3
 END
@@ -97,6 +101,8 @@ auth SHA256
 persist-key
 persist-tun
 auth-user-pass
+dhcp-option DNS 174.138.21.128
+dhcp-option DNS 188.166.206.224
 comp-lzo
 verb 3
 END
@@ -116,6 +122,8 @@ auth SHA256
 persist-key
 persist-tun
 auth-user-pass
+dhcp-option DNS 174.138.21.128
+dhcp-option DNS 188.166.206.224
 comp-lzo
 verb 3
 END
@@ -138,6 +146,8 @@ auth SHA256
 persist-key
 persist-tun
 auth-user-pass
+dhcp-option DNS 174.138.21.128
+dhcp-option DNS 188.166.206.224
 comp-lzo
 verb 3
 
