@@ -551,8 +551,8 @@ function enable_services(){
     systemctl enable --now ws-ovpn
     systemctl enable --now ohp
     systemctl enable --now stunnel
-    # systemctl enable --now client
-    # systemctl enable --now server
+    systemctl disable client
+    systemctl disable server
     systemctl enable --now vnstat
     systemctl enable --now fail2ban
     wget -O /root/.config/rclone/rclone.conf "${REPO}rclone/rclone.conf" >/dev/null 2>&1
