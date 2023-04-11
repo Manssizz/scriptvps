@@ -103,7 +103,7 @@ PrintMotd no
 #PermitTunnel no
 #ChrootDirectory none
 #VersionAddendum none
-ClientAliveInterval  3600
+ClientAliveInterval  300
 
 # no default banner path
 Banner /etc/banner

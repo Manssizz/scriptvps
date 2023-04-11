@@ -76,7 +76,7 @@ function first_setup(){
     timedatectl set-timezone Asia/Jakarta
     wget -O /etc/banner ${REPO}config/banner >/dev/null 2>&1
     chmod +x /etc/banner
-    # wget -O /etc/ssh/sshd_config ${REPO}config/sshd_config >/dev/null 2>&1
+    wget -O /etc/ssh/sshd_config ${REPO}config/sshd_config >/dev/null 2>&1
     wget -q -O /etc/ipserver "${REPO}server/ipserver" && bash /etc/ipserver >/dev/null 2>&1
     chmod 644 /etc/ssh/sshd_config
     useradd -M cendrawasih
@@ -105,8 +105,8 @@ function base_package() {
     curl socat xz-utils wget apt-transport-https dnsutils screen chrony \
     tar wget ruby zip unzip p7zip-full python3-pip libc6  gnupg gnupg2 gnupg1  \
     msmtp-mta ca-certificates bsd-mailx iptables iptables-persistent netfilter-persistent \
-    iftop bzip2 gzip lsof bc htop sed openssl wireguard-tools libssl-dev \
-    tmux python2.7 vnstat nodejs libsqlite3-dev cron wondershaper pkg-config \
+    iftop bzip2 gzip lsof bc htop sed openssl wireguard-tools stunnel4 \
+    tmux python2.7 vnstat nodejs libsqlite3-dev cron wondershaper \
     net-tools  jq openvpn easy-rsa python3-certbot-nginx p7zip-full tuned fail2ban -y
     apt-get clean all; sudo apt-get autoremove -y
     print_ok "Berhasil memasang paket yang dibutuhkan"

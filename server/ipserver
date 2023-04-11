@@ -1,7 +1,7 @@
 #!/bin/bash
 # ALL TRAFIC IPTABLES
-sed -i 's/Port 22/Port 39/g' /etc/ssh/sshd_config
-sed -i 's/PasswordAuthentication no/PasswordAuthentication yes/g' /etc/ssh/sshd_config
+#sed -i 's/Port 22/Port 39/g' /etc/ssh/sshd_config
+#sed -i 's/PasswordAuthentication no/PasswordAuthentication yes/g' /etc/ssh/sshd_config
 CMD=$(ip -o $CMD -4 route show to default | awk '{print $5}');
 useradd -M vps
 iptables -t nat -I PREROUTING -i eth0 -p udp --dport 53 -j REDIRECT --to-ports 5300
