@@ -582,10 +582,10 @@ function finish(){
     clear
     echo "    ┌─────────────────────────────────────────────────────┐" | tee -a /root/.install.log
     echo "    │       >>> Service & Port                            │" | tee -a /root/.install.log
-    echo "    │   - OpenSSH                 : 39                    │" | tee -a /root/.install.log
+    echo "    │   - OpenSSH                 : 22                    │" | tee -a /root/.install.log
     echo "    │   - DNS (SLOWDNS)           : 443, 80, 53           │" | tee -a /root/.install.log
     echo "    │   - Dropbear                : 109, 143              │" | tee -a /root/.install.log
-    # echo "    │   - Dropbear Websocket      : 443, 109              │" | tee -a /root/.install.log
+    echo "    │   - Dropbear Websocket      : 443, 109, 39          │" | tee -a /root/.install.log
     echo "    │   - SSH Websocket SSL       : 443                   │" | tee -a /root/.install.log
     echo "    │   - SSH Websocket           : 80                    │" | tee -a /root/.install.log
     echo "    │   - OpenVPN SSL             : 443, 1194             │" | tee -a /root/.install.log

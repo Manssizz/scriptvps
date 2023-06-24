@@ -28,7 +28,7 @@ Akses kembali 20 menit setelah proses instalasi. **Akses kembali via ssh menggun
 ```
     ┌─────────────────────────────────────────────────────┐
     │       >>> Service & Port                            │
-    │   - OpenSSH                 : 39 (UNTEST)           │
+    │   - OpenSSH                 : 22 (UNTEST)           │
     │   - DNS (SLOWDNS)           : 443, 80, 53           │
     │   - Dropbear                : 109, 143              │
     │   - SSH Websocket SSL       : 443                   │
