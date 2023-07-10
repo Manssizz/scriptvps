@@ -548,7 +548,7 @@ function enable_services(){
     systemctl enable --now ws-dropbear
     systemctl enable --now ws-ovpn
     systemctl enable --now ohp
-    systemctl enable --now stunnel
+    systemctl enable --now stunnel4
     systemctl disable client
     systemctl disable server
     systemctl enable --now vnstat
