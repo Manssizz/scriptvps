@@ -11,7 +11,6 @@
 ### INSTALL SCRIPT
 <pre><code>apt install -y wget screen && wget -q https://raw.githubusercontent.com/Manssizz/scriptvps/master/main.sh && chmod +x main.sh && screen -S install ./main.sh</code></pre>
 
-Akses kembali 20 menit setelah proses instalasi. **Akses kembali via ssh menggunakan port 39**
 
 ### TESTED ON OS 
 - UBUNTU 20.04.05
@@ -28,9 +27,9 @@ Akses kembali 20 menit setelah proses instalasi. **Akses kembali via ssh menggun
 ```
     ┌─────────────────────────────────────────────────────┐
     │       >>> Service & Port                            │
-    │   - OpenSSH                 : 22 (UNTEST)           │
+    │   - OpenSSH                 : 22                    │
     │   - DNS (SLOWDNS)           : 443, 80, 53           │
-    │   - Dropbear                : 109, 143              │
+    │   - Dropbear                : 39, 109, 143          │
     │   - SSH Websocket SSL       : 443                   │
     │   - SSH Websocket           : 80 (UNTEST)           │
     │   - OpenVPN SSL             : 443, 1194 (UNTEST)    │
