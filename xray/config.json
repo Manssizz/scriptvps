@@ -293,16 +293,16 @@
   },
   "dns": {
     "hosts": {
-      "dns.tiarap": "174.138.21.128",
+      "dns.quad9": "9.9.9.11",
       "geosite:category-ads-all": "127.0.0.1"
     },
     "servers": [
       {
-        "address": "https://doh.tiar.app/dns-query",
+        "address": "https://dns11.quad9.net/dns-query",
         "domains": ["geosite:geolocation-!id"],
         "expectIPs": ["geoip:!id"]
       },
-      "174.138.21.128",
+      "9.9.9.11",
       {
         "address": "1.1.1.1",
         "port": 53,
@@ -358,7 +358,7 @@
       "settings": {
         "port": 53,
         "network": "udp",
-        "address": "174.138.21.128"
+        "address": "9.9.9.11"
       },
       "tag": "dns-in",
       "listen": "127.0.0.1"

