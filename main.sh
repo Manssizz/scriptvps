@@ -524,7 +524,7 @@ chmod 644 /root/.profile
 #####################################
 echo "INSTALLING SCRIPT..."
 
-touch /root/.install.log
+touch /etc/cendrawasih/install.log
 cat >/root/tmp <<-END
 #!/bin/bash
 #vps
@@ -580,34 +580,34 @@ function finish(){
     # > Bersihkan History
     alias bash2="bash --init-file <(echo '. ~/.bashrc; unset HISTFILE')"
     clear
-    echo "    ┌─────────────────────────────────────────────────────┐" | tee -a /root/.install.log
-    echo "    │       >>> Service & Port                            │" | tee -a /root/.install.log
-    echo "    │   - OpenSSH                 : 22                    │" | tee -a /root/.install.log
-    echo "    │   - DNS (SLOWDNS)           : 443, 80, 53           │" | tee -a /root/.install.log
-    echo "    │   - Dropbear                : 109, 143              │" | tee -a /root/.install.log
-    echo "    │   - Dropbear Websocket      : 443, 109, 39          │" | tee -a /root/.install.log
-    echo "    │   - SSH Websocket SSL       : 443                   │" | tee -a /root/.install.log
-    echo "    │   - SSH Websocket           : 80                    │" | tee -a /root/.install.log
-    echo "    │   - OpenVPN SSL             : 443, 1194             │" | tee -a /root/.install.log
-    echo "    │   - OpenVPN Websocket SSL   : 443                   │" | tee -a /root/.install.log
-    echo "    │   - OpenVPN TCP             : 1194                  │" | tee -a /root/.install.log
-    echo "    │   - OpenVPN UDP             : 2200                  │" | tee -a /root/.install.log
-    echo "    │   - Nginx Webserver         : 81                    │" | tee -a /root/.install.log
-#    echo "    │   - Haproxy Loadbalancer    : 443, 80               │" | tee -a /root/.install.log
-    echo "    │   - DNS Server              : 443, 53               │" | tee -a /root/.install.log
-    echo "    │   - DNS Client              : 443, 88               │" | tee -a /root/.install.log
-    echo "    │   - XRAY DNS (SLOWDNS)      : 443, 80, 53           │" | tee -a /root/.install.log
-    echo "    │   - XRAY Vmess TLS          : 443                   │" | tee -a /root/.install.log
-    echo "    │   - XRAY Vmess gRPC         : 443                   │" | tee -a /root/.install.log
-    echo "    │   - XRAY Vmess None TLS     : 80                    │" | tee -a /root/.install.log
-    echo "    │   - XRAY Vless TLS          : 443                   │" | tee -a /root/.install.log
-    echo "    │   - XRAY Vless gRPC         : 443                   │" | tee -a /root/.install.log
-    echo "    │   - XRAY Vless None TLS     : 80                    │" | tee -a /root/.install.log
-    echo "    │   - Trojan gRPC             : 443                   │" | tee -a /root/.install.log
-    echo "    │   - Trojan WS               : 443                   │" | tee -a /root/.install.log
-    echo "    │   - Shadowsocks WS          : 443                   │" | tee -a /root/.install.log
-    echo "    │   - Shadowsocks gRPC        : 443                   │" | tee -a /root/.install.log
-    echo "    └─────────────────────────────────────────────────────┘" | tee -a /root/.install.log
+    echo "    ┌─────────────────────────────────────────────────────┐" | tee -a /etc/cendrawasih/install.log
+    echo "    │       >>> Service & Port                            │" | tee -a /etc/cendrawasih/install.log
+    echo "    │   - OpenSSH                 : 22                    │" | tee -a /etc/cendrawasih/install.log
+    echo "    │   - DNS (SLOWDNS)           : 443, 80, 53           │" | tee -a /etc/cendrawasih/install.log
+    echo "    │   - Dropbear                : 109, 143              │" | tee -a /etc/cendrawasih/install.log
+    echo "    │   - Dropbear Websocket      : 443, 109, 39          │" | tee -a /etc/cendrawasih/install.log
+    echo "    │   - SSH Websocket SSL       : 443                   │" | tee -a /etc/cendrawasih/install.log
+    echo "    │   - SSH Websocket           : 80                    │" | tee -a /etc/cendrawasih/install.log
+    echo "    │   - OpenVPN SSL             : 443, 1194             │" | tee -a /etc/cendrawasih/install.log
+    echo "    │   - OpenVPN Websocket SSL   : 443                   │" | tee -a /etc/cendrawasih/install.log
+    echo "    │   - OpenVPN TCP             : 1194                  │" | tee -a /etc/cendrawasih/install.log
+    echo "    │   - OpenVPN UDP             : 2200                  │" | tee -a /etc/cendrawasih/install.log
+    echo "    │   - Nginx Webserver         : 81                    │" | tee -a /etc/cendrawasih/install.log
+#    echo "    │   - Haproxy Loadbalancer    : 443, 80               │" | tee -a /etc/cendrawasih/install.log
+    echo "    │   - DNS Server              : 443, 53               │" | tee -a /etc/cendrawasih/install.log
+    echo "    │   - DNS Client              : 443, 88               │" | tee -a /etc/cendrawasih/install.log
+    echo "    │   - XRAY DNS (SLOWDNS)      : 443, 80, 53           │" | tee -a /etc/cendrawasih/install.log
+    echo "    │   - XRAY Vmess TLS          : 443                   │" | tee -a /etc/cendrawasih/install.log
+    echo "    │   - XRAY Vmess gRPC         : 443                   │" | tee -a /etc/cendrawasih/install.log
+    echo "    │   - XRAY Vmess None TLS     : 80                    │" | tee -a /etc/cendrawasih/install.log
+    echo "    │   - XRAY Vless TLS          : 443                   │" | tee -a /etc/cendrawasih/install.log
+    echo "    │   - XRAY Vless gRPC         : 443                   │" | tee -a /etc/cendrawasih/install.log
+    echo "    │   - XRAY Vless None TLS     : 80                    │" | tee -a /etc/cendrawasih/install.log
+    echo "    │   - Trojan gRPC             : 443                   │" | tee -a /etc/cendrawasih/install.log
+    echo "    │   - Trojan WS               : 443                   │" | tee -a /etc/cendrawasih/install.log
+    echo "    │   - Shadowsocks WS          : 443                   │" | tee -a /etc/cendrawasih/install.log
+    echo "    │   - Shadowsocks gRPC        : 443                   │" | tee -a /etc/cendrawasih/install.log
+    echo "    └─────────────────────────────────────────────────────┘" | tee -a /etc/cendrawasih/install.log
     echo "    ┌─────────────────────────────────────────────────────┐"
     echo "    │                                                     │"
     echo "    │      >>> Server Information & Other Features        │"
