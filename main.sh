@@ -260,7 +260,7 @@ function install_slowdns(){
     print_install "Memasang modul SlowDNS Server"
     wget -q -O /tmp/nameserver "${REPO}slowdns/nameserver" >/dev/null 2>&1
     chmod +x /tmp/nameserver
-    bash /tmp/nameserver | tee /root/install.log
+    bash /tmp/nameserver | tee /etc/cendrawasih/install.log
     print_success "SlowDNS"
 }
 
@@ -561,15 +561,15 @@ function install_all() {
     # dir_xray
     # add_domain
     pasang_ssl 
-    install_xray >> /root/install.log
-    install_stunnel >> /root/install.log
-    install_websocket >> /root/install.log
-    install_ovpn >> /root/install.log
-    install_slowdns >> /root/install.log
-    download_config >> /root/install.log
-    enable_services >> /root/install.log
-    tambahan >> /root/install.log
-    pasang_rclone >> /root/install.log
+    install_xray >> /etc/cendrawasih/install.log
+    install_stunnel >> /etc/cendrawasih/install.log
+    install_websocket >> /etc/cendrawasih/install.log
+    install_ovpn >> /etc/cendrawasih/install.log
+    install_slowdns >> /etc/cendrawasih/install.log
+    download_config >> /etc/cendrawasih/install.log
+    enable_services >> /etc/cendrawasih/install.log
+    tambahan >> /etc/cendrawasih/install.log
+    pasang_rclone >> /etc/cendrawasih/install.log
 }
 
 function finish(){
