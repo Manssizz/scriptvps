@@ -116,14 +116,14 @@ function dir_xray() {
     print_install "Membuat direktori xray"
     mkdir -p /etc/{xray,vmess,websocket,vless,trojan,shadowsocks}
     mkdir -p /var/log/xray/
-    mkdir -p /etc/cendrawasih/public_html
+    mkdir -p /etc/cendrawasih/{database,public_html}
     touch /var/log/xray/{access.log,error.log}
     chmod 777 /var/log/xray/*.log
-    touch /etc/vmess/.vmess.db
-    touch /etc/vless/.vless.db
-    touch /etc/trojan/.trojan.db
-    touch /etc/ssh/.ssh.db
-    touch /etc/shadowsocks/.shadowsocks.db
+    touch /etc/cendrawasih/database/vmess/vmess.db
+    touch /etc/cendrawasih/database/vless/vless.db
+    touch /etc/cendrawasih/database/trojan/trojan.db
+    touch /etc/cendrawasih/database/ssh/ssh.db
+    touch /etc/cendrawasih/database/shadowsocks/shadowsocks.db
     clear
 }
 
