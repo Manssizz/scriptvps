@@ -11,8 +11,8 @@
 Include /etc/ssh/sshd_config.d/*.conf
 
 Port 22
-Port 39
-Port 3939
+#Port 39
+#Port 3939
 #AddressFamily any
 #ListenAddress 0.0.0.0
 #ListenAddress ::
@@ -39,7 +39,7 @@ Port 3939
 #PubkeyAuthentication yes
 
 # Expect .ssh/authorized_keys2 to be disregarded by default in future.
-AuthorizedKeysFile     .ssh/authorized_keys .ssh/authorized_keys2
+AuthorizedKeysFile     .ssh/authorized_keys
 
 #AuthorizedPrincipalsFile none
 

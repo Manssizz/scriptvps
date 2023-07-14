@@ -361,7 +361,7 @@ EOF
 cat >/etc/cron.d/xp_all <<EOF
 SHELL=/bin/sh
 PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
-2 0 * * * root /usr/bin/xp
+50 4 * * * root /usr/sbin/xp
 EOF
 
 cat >/etc/cron.d/daily_reboot <<EOF
