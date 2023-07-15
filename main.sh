@@ -614,7 +614,6 @@ function finish(){
     echo "    │   - VPS settings                                    │"
     echo "    │   - Admin Control                                   │"
     echo "    │   - Restore Data                                    │"
-    echo "    │   - Full Orders For Various Services                │"
     echo "    └─────────────────────────────────────────────────────┘"
     secs_to_human "$(($(date +%s) - ${start}))"
     # echo -ne "         ${YELLOW}Please Reboot Your Vps${FONT} (y/n)? "
