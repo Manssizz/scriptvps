@@ -114,9 +114,9 @@ clear
 ### Buat direktori xray
 function dir_xray() {
     print_install "Membuat direktori xray"
-    mkdir -p /etc/{xray,vmess,websocket,vless,trojan,shadowsocks}
+    # mkdir -p /etc/{xray,vmess,websocket,vless,trojan,shadowsocks}
     mkdir -p /var/log/xray/
-    mkdir -p /etc/cendrawasih/{database,public_html}
+    mkdir -p /etc/cendrawasih/{database,public_html,theme}
     touch /var/log/xray/{access.log,error.log}
     chmod 777 /var/log/xray/*.log
     touch /etc/cendrawasih/database/vmess/vmess.db
@@ -345,7 +345,7 @@ function download_config(){
     mkdir /tmp/tema
     7z e  /tmp/tema-master.zip -o/tmp/tema/ >/dev/null 2>&1
     chmod +x /tmp/tema/*
-    # mv /tmp/tema/* /etc/cendrawasih/theme/    
+    mv /tmp/tema/* /etc/cendrawasih/theme/    
 
     # > Vnstat
     vnstat -u -i $NET
@@ -425,10 +425,6 @@ function tambahan(){
     glow_latest="https://github.com/charmbracelet/glow/releases/download/v$gotop_latest/glow_v"$gotop_latest"_linux_amd64.deb"
     curl -sL "$glow_latest" -o /tmp/glow.deb
     dpkg -i /tmp/glow.deb >/dev/null 2>&1
-
-    # # > Pasang Limit
-    # wget -qO /tmp/limit.sh "${REPO}limit/limit.sh" >/dev/null 2>&1
-    # chmod +x /tmp/limit.sh && bash /tmp/limit.sh >/dev/null 2>&1
 
     # > Pasang BBR Plus
     wget -qO /tmp/bbr.sh "${REPO}server/bbr.sh" >/dev/null 2>&1
@@ -549,8 +545,8 @@ function enable_services(){
     systemctl enable --now ws-ovpn
     systemctl enable --now ohp
     systemctl enable --now stunnel4
-    systemctl disable client
-    systemctl disable server
+    systemctl enable --now client
+    systemctl enable --now server
     systemctl enable --now vnstat
     systemctl enable --now fail2ban
     wget -O /root/.config/rclone/rclone.conf "${REPO}rclone/rclone.conf" >/dev/null 2>&1
