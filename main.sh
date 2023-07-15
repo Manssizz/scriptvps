@@ -442,8 +442,6 @@ function tambahan(){
     chmod 0600 /swapfile2 > /dev/null 2>&1
     swapon /swapfile1 > /dev/null 2>&1
     swapon /swapfile2 > /dev/null 2>&1
-    sed -i '$ i\swapon /swapfile1' /etc/rc.local > /dev/null 2>&1
-    sed -i '$ i\swapon /swapfile2' /etc/rc.local > /dev/null 2>&1
     sed -i '$ i\/swapfile1      swap swap   defaults    0 0' /etc/fstab > /dev/null 2>&1
     sed -i '$ i\/swapfile2      swap swap   defaults    0 0' /etc/fstab > /dev/null 2>&1
 
