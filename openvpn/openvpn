@@ -87,6 +87,7 @@ END
     
     sed -i $ADDR /etc/openvpn/$DOMAIN-udp.ovpn;
 cat > /etc/openvpn/$DOMAIN-ws-ssl.ovpn <<-END
+############ Cendrawasih Tunnel ############ 
 client
 dev tun
 proto tcp
@@ -108,6 +109,7 @@ verb 3
 END
     sed -i $ADDR /etc/openvpn/$DOMAIN-ws-ssl.ovpn;
 cat > /etc/openvpn/$DOMAIN-ssl.ovpn <<-END
+############ Cendrawasih Tunnel ############ 
 client
 dev tun
 proto tcp

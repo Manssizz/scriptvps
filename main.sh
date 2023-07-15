@@ -29,7 +29,7 @@ TIME=$(date +'%Y-%m-%d %H:%M:%S')
 RAMMS=$(free -m | awk 'NR==2 {print $2}')
 REPO="https://raw.githubusercontent.com/manssizz/scriptvps/master/"
 APT="apt-get -y install "
-domain=$(cat /root/domain)
+domain=$(cat /etc/cendrawasih/domain)
 start=$(date +%s)
 secs_to_human() {
     echo "Installation time : $((${1} / 3600)) hours $(((${1} / 60) % 60)) minute's $((${1} % 60)) seconds"
@@ -114,9 +114,10 @@ clear
 ### Buat direktori xray
 function dir_xray() {
     print_install "Membuat direktori xray"
-    # mkdir -p /etc/{xray,vmess,websocket,vless,trojan,shadowsocks}
+    mkdir -p /etc/xray
     mkdir -p /var/log/xray/
     mkdir -p /etc/cendrawasih/{database,public_html,theme}
+    touch /etc/cendrawasih/install.log
     touch /var/log/xray/{access.log,error.log}
     chmod 777 /var/log/xray/*.log
     touch /etc/cendrawasih/database/vmess/vmess.db
@@ -130,16 +131,16 @@ function dir_xray() {
 ### Tambah domain
 function add_domain() {
     echo "`cat /etc/banner`"
-    read -rp "Input Your Domain For This Server :" -e SUB_DOMAIN
+    read -rp "Input Your Domain For This Server:" -e SUB_DOMAIN
     echo "Host : $SUB_DOMAIN"
-    echo $SUB_DOMAIN > /root/domain
-    cp /root/domain /etc/xray/domain
+    echo $SUB_DOMAIN > /etc/cendrawasih/domain
+    cp /etc/cendrawasih/domain /etc/xray/domain
 }
 
 ### Pasang SSL
 function pasang_ssl() {
     print_install "Memasang SSL pada domain"
-    domain=$(cat /root/domain)
+    domain=$(cat /etc/cendrawasih/domain)
     STOPWEBSERVER=$(lsof -i:80 | cut -d' ' -f1 | awk 'NR==2 {print $1}')
     rm -rf /root/.acme.sh
     mkdir /root/.acme.sh
@@ -520,7 +521,6 @@ chmod 644 /root/.profile
 #####################################
 echo "INSTALLING SCRIPT..."
 
-touch /etc/cendrawasih/install.log
 cat >/root/tmp <<-END
 #!/bin/bash
 #vps
