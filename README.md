@@ -21,7 +21,7 @@
 - Tuning profile pada server
 - Xray Core by [@dharak36](https://github.com/dharak36/Xray-core)
 - Penambahan fail2ban
-- Penggunaan [quad9](https://www.quad9.net/) sebagai dns resolver.
+- Penggunaan [Tiarap](https://github.com/pengelana/blocklist) sebagai dns resolver.
 
 ### PORT INFO
 ```

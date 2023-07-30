@@ -293,18 +293,18 @@
   },
   "dns": {
     "hosts": {
-      "dns.quad9": "9.9.9.11",
+      "tiar.app": "174.138.21.128",
       "geosite:category-ads-all": "127.0.0.1"
     },
     "servers": [
       {
-        "address": "https://dns11.quad9.net/dns-query",
+        "address": "https://doh.tiar.app/dns-query",
         "domains": ["geosite:geolocation-!id"],
         "expectIPs": ["geoip:!id"]
       },
-      "9.9.9.11",
+      "174.138.21.128",
       {
-        "address": "1.1.1.1",
+        "address": "174.138.21.128",
         "port": 53,
         "domains": ["geosite:id", "geosite:category-games@id"],
         "expectIPs": ["geoip:id"],
@@ -358,7 +358,7 @@
       "settings": {
         "port": 53,
         "network": "udp",
-        "address": "9.9.9.11"
+        "address": "174.138.21.128"
       },
       "tag": "dns-in",
       "listen": "127.0.0.1"
